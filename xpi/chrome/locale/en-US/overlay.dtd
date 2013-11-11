@@ -1,8 +1,0 @@
-<!ENTITY superdrag.label "Your localized menuitem">
-<!ENTITY superdragContext.label "Your Menuitem">
-<!ENTITY superdragContext.accesskey "Y">
-<!ENTITY superdragToolbarButton.label "Your Toolbar Button">
-<!ENTITY superdragToolbarButton.tooltip "This is your toolbar button!">
-<!ENTITY superdragSidebar.label "Your Sidebar">
-<!ENTITY superdragToolbar.name  "example">
-<!ENTITY superdragToolbar.label "This is an example toolbar. You can hide it under View &gt; toolbars &gt; &superdragToolbar.name;">

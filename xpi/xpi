@@ -1,0 +1,30 @@
+#!/bin/sh
+
+# create tags first
+# ctags -R *
+`brew --prefix`/bin/ctags -R *
+
+# if exist superdrag.xpi goto deletexpi
+if [ -f superdrag.xpi ] ; then
+	rm superdrag.xpi
+fi
+
+# add other files other the jar into superdrag.xpi
+7z a superdrag.xpi * -r -tzip -x!xpi -x!.DS_Store -x!*.vim -x!*.bat -x!*.tmp -x!*.swp -x!*.svn -x!*.zip -x!*.git -x!*.php -x!tags -x!*.xpi -x!*.pdn -x!*.psd  -x!*.idl -x!*.patch -x!chrome/* -x!bak.*
+
+# jar
+cd chrome
+if [ -f superdrag.jar ] ; then
+	rm superdrag.jar
+fi
+
+7z a superdrag.jar * -r -tzip -mx0 -x!xpi -x!.DS_Store -x!*.vim -x!*.bat -x!*.tmp -x!*.swp -x!*.svn -x!*.zip -x!*.git -x!*.php -x!tags -x!*.xpi -x!*.pdn -x!*.psd -x!*.idl -x!*.patch -x!test* -x!bak.*
+
+cd ..
+
+# add jar into superdrag
+7z a superdrag.xpi chrome/superdrag.jar
+
+# cleanup
+rm chrome/superdrag.jar
+

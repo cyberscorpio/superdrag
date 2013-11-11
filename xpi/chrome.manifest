@@ -1,0 +1,4 @@
+content   superdrag                 chrome/content/
+skin      superdrag   classic/1.0   chrome/skin/
+locale    superdrag   en-US         chrome/locale/en-US/
+overlay	chrome://browser/content/browser.xul	chrome://superdrag/content/ff-overlay.xul

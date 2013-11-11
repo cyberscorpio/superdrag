@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:em="http://www.mozilla.org/2004/em-rdf#">
+    <Description about="urn:mozilla:install-manifest">
+        <em:type>2</em:type> <!-- 2 : Extension -->
+        <em:id>{9904E791-C5F0-44EF-B427-9A5214FEAA6B}</em:id>
+        <em:version>1.0</em:version>
+        <em:name>SuperDrag</em:name>
+        <em:description>Surf the web in an easy way!</em:description>
+        <em:creator>cyberscorpio</em:creator>
+        <em:targetApplication>
+            <Description>
+                <!-- Firefox -->
+                <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
+                <em:minVersion>21.0</em:minVersion>
+                <em:maxVersion>28.0</em:maxVersion>
+            </Description>
+        </em:targetApplication>
+        <em:optionsURL>chrome://superdrag/content/options.xul</em:optionsURL>
+        <em:aboutURL>chrome://superdrag/content/about.xul</em:aboutURL>
+    </Description>
+</RDF>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="chrome://superdrag/skin/overlay.css" type="text/css"?>
+<!DOCTYPE overlay SYSTEM "chrome://superdrag/locale/overlay.dtd">
+<overlay id="superdrag-overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <script src="ff-overlay.js"/>
+  <stringbundleset id="stringbundleset">
+    <stringbundle id="superdrag-strings" src="chrome://superdrag/locale/overlay.properties"/>
+  </stringbundleset>
+</overlay>

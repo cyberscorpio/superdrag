@@ -1,0 +1,11 @@
+content       superdrag               jar:chrome/superdrag.jar!/content/
+# resource      superdrag               modules/
+# skin          superdrag  classic/1.0  themes/
+
+# overlay chrome://browser/content/browser.xul chrome://superdrag/content/startup.xul
+
+#######################################################
+# Locale support
+
+# default locale
+locale	superdrag	en-US   jar:chrome/superdrag.jar!/locale/en-US/

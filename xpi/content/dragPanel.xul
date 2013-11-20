@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 
 <?xml-stylesheet href="chrome://global/skin/global.css"?>
+<?xml-stylesheet href="chrome://superdrag/skin/panel.css"?>
 
 <!--
 <panel id="superdrag-panel">
@@ -30,14 +31,13 @@
         windowtype="SuperDrag:panelWindow"
         id="superdrag-window"
         title="SuperDrag"
-        width="320" height="600"
         persist="screenX,screenY,width,height,sizemode"
         onload="onLoad()" onunload="" onclose="return onClose();">
-    <vbox flex="2" id="main" collapsed="false" style="width:300px; height: 300px; background: yellow;">
+    <vbox flex="2" id="main-panel" collapsed="false">
     </vbox>
     <script type="application/x-javascript">
         onLoad = function() {
-		var m = document.getElementById('main');
+		var m = document.getElementById('main-panel');
 		m.ondragover = function(evt) {
 			evt.preventDefault();
 		};

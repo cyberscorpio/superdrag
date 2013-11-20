@@ -60,53 +60,61 @@ var SuperDrag = new function() {
 	
 	// install or uninstall
 	function inUninstall(win, uninstall) {
-		var doc = win.document;
-		var tb = doc.getElementById('content'); // TabBrowser
-		if (tb != null) {
-			var pc = tb.mPanelContainer;
-			if (pc != null) {
-				for (var k in pcMsgs) {
-					if (uninstall) {
-						pc.removeEventListener(k, pcMsgs[k], false);
-					} else {
-						pc.addEventListener(k, pcMsgs[k], false);
+		try {
+			var doc = win.document;
+			var tb = doc.getElementById('content'); // TabBrowser
+			if (tb != null) {
+				var pc = tb.mPanelContainer;
+				if (pc != null) {
+					for (var k in pcMsgs) {
+						if (uninstall) {
+							pc.removeEventListener(k, pcMsgs[k], false);
+						} else {
+							pc.addEventListener(k, pcMsgs[k], false);
+						}
 					}
 				}
 			}
-		}
 
-		var appcontent = doc.getElementById('appcontent');
+			var appcontent = doc.getElementById('appcontent');
 
-		if (uninstall) {
-			var panel = doc.getElementById('superdrag-drag-panel');
-			if (panel != null) {
-				panel.parentNode.removeChild(panel);
+			if (uninstall) {
+				var panel = doc.getElementById('superdrag-drag-panel');
+				if (panel != null) {
+					panel.parentNode.removeChild(panel);
+				}
+			} else {
+				var rc = appcontent.getBoundingClientRect();
+				var panel = doc.createElement('panel');
+				panel.id = 'superdrag-drag-panel';
+				panel.style.position = 'fixed';
+//				panel.style.width = '280px';
+//				panel.style.height = '280px';
+				panel.style.top = rc.top + 'px';//'72px';
+				panel.style.right = '30px';
+				panel.style.boxShadow = '0 2px 25px 2px black';
+
+				appcontent.appendChild(panel);
+
+				var browser = doc.createElement('browser');
+				browser.setAttribute('disablehistory', true);
+
+				browser.style.width = '400px';
+				browser.style.height = '200px';
+				browser.onclick = function() {
+//					appcontent.removeChild(panel);
+				};
+				panel.appendChild(browser);
+				browser.loadURI('chrome://superdrag/content/dragPanel.xul');
+
+				win.setTimeout(function() {
+					panel.style.position = '';
+					panel.hidePopup();
+				}, 0);
+
 			}
-		} else {
-			var panel = doc.createElement('panel');
-			panel.id = 'superdrag-drag-panel';
-			panel.style.position = 'fixed';
-			panel.style.width = '280px';
-			panel.style.height = '280px';
-			panel.style.top = '0px';
-			panel.style.right = '30px';
-			panel.style.boxShadow = '0 0 15px black';
-
-			appcontent.appendChild(panel);
-
-			var browser = doc.createElement('browser');
-			browser.setAttribute('disablehistory', true);
-			browser.style.width = '280px';
-			browser.style.height = '280px';
-			browser.onclick = function() {
-				appcontent.removeChild(panel);
-			};
-			panel.appendChild(browser);
-			win.setTimeout(function() {
-				panel.hidePopup();
-			}, 0);
-
-			browser.loadURI('chrome://superdrag/content/dragPanel.xul');
+		} catch (e) {
+			log(e);
 		}
 	}
 
@@ -168,7 +176,7 @@ var SuperDrag = new function() {
 					var wm = getMainWindow();
 					panel = wm.document.getElementById('superdrag-drag-panel');
 					if (panel != null) {
-						panel.openPopup(wm.document.getElementById('appcontent'), 'start_before', 0, 0);
+						panel.openPopup(wm.document.getElementById('appcontent'), 'start_before', -400, 0);
 					}
 				}
 			}
@@ -367,14 +375,20 @@ var SuperDrag = new function() {
 		}
 	}
 
-	function dump(o) {
+	function dump(o, arg) {
 		for (var k in o) {
 			var prefix = '    ';
-			if (typeof o[k] == 'function') {
-				prefix = '    (f)';
-				continue;
+			if (arg == 'f') {
+				if (typeof o[k] == 'function') {
+					prefix = '    (f)';
+					log(prefix + k + ':\t\t' + o[k]);
+				}
+			} else {
+				if (typeof o[k] == 'function') {
+					continue;
+				}
+				log(prefix + k + ':\t\t' + o[k]);
 			}
-			log(prefix + k + ':\t\t' + o[k]);
 		}
 		log(o + (o.tagName === undefined ? '' : ' (' + o.tagName + ')'));
 	}

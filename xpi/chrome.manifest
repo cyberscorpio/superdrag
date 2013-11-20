@@ -1,6 +1,5 @@
-content       superdrag               chrome/content/ contentaccessible=yes
-# resource      superdrag               modules/
-# skin          superdrag  classic/1.0  themes/
+content       superdrag               content/       contentaccessible=yes
+skin          superdrag  classic/1.0  skin/
 
 # overlay chrome://browser/content/browser.xul chrome://superdrag/content/startup.xul
 
@@ -8,4 +7,4 @@ content       superdrag               chrome/content/ contentaccessible=yes
 # Locale support
 
 # default locale
-locale	superdrag	en-US   jar:chrome/superdrag.jar!/locale/en-US/
+locale	superdrag	en-US   locale/en-US/

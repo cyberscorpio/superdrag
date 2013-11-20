@@ -36,13 +36,6 @@ function startup(aData, aReason) {
 
 	// Register resource://
 	var res = Services.io.getProtocolHandler("resource").QueryInterface(Ci.nsIResProtocolHandler);
-	/*
-	let alias = Services.io.newFileURI(aData.installPath);
-	if (!aData.installPath.isDirectory()) {
-		alias = Services.io.newURI("jar:" + alias.spec + "!/", null, null);
-	}
-	alias.path += 'modules/';
-	*/
 	var alias = Services.io.newURI(__SCRIPT_URI_SPEC__ + "/../modules/", null, null);
 	logger.logStringMessage(alias.path);
 	res.setSubstitution("superdrag", alias);
@@ -50,14 +43,14 @@ function startup(aData, aReason) {
 	// import the component(s)
 	Cu.import('resource://superdrag/superdrag.js');
 
-	logger.logStringMessage('dump SuperDrag:');
-	for (var k in SuperDrag) {
-		var prefix = '   ';
-		if (typeof SuperDrag[k] == 'function') {
-			prefix = ' (f)';
-		}
-		logger.logStringMessage(prefix + k);
-	}
+//	logger.logStringMessage('dump SuperDrag:');
+//	for (var k in SuperDrag) {
+//		var prefix = '   ';
+//		if (typeof SuperDrag[k] == 'function') {
+//			prefix = ' (f)';
+//		}
+//		logger.logStringMessage(prefix + k);
+//	}
 
 	SuperDrag.init();
 }

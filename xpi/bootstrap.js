@@ -24,6 +24,11 @@ const Cc = Components.classes;
 const Ci = Components.interfaces;
 const Cu = Components.utils;
 
+var SUPERDRAG_MODULES = [
+	'resource://superdrag/superdrag.js',
+];
+var logger = Cc['@mozilla.org/consoleservice;1'].getService(Ci.nsIConsoleService);
+
 Cu.import("resource://gre/modules/Services.jsm");
 
 function startup(aData, aReason) {
@@ -31,17 +36,20 @@ function startup(aData, aReason) {
 
 	// Register resource://
 	var res = Services.io.getProtocolHandler("resource").QueryInterface(Ci.nsIResProtocolHandler);
+	/*
 	let alias = Services.io.newFileURI(aData.installPath);
 	if (!aData.installPath.isDirectory()) {
 		alias = Services.io.newURI("jar:" + alias.spec + "!/", null, null);
 	}
 	alias.path += 'modules/';
+	*/
+	var alias = Services.io.newURI(__SCRIPT_URI_SPEC__ + "/../modules/", null, null);
+	logger.logStringMessage(alias.path);
 	res.setSubstitution("superdrag", alias);
 
 	// import the component(s)
 	Cu.import('resource://superdrag/superdrag.js');
 
-	var logger = Cc['@mozilla.org/consoleservice;1'].getService(Ci.nsIConsoleService);
 	logger.logStringMessage('dump SuperDrag:');
 	for (var k in SuperDrag) {
 		var prefix = '   ';
@@ -66,11 +74,11 @@ function shutdown(aData, aReason) {
 	SuperDrag.shutdown();
 
 	// Unload the component(s).
-	Cu.unload('resource://superdrag/superdrag.js');
+	SUPERDRAG_MODULES.forEach(Cu.unload, Cu);
 
 	// Unregister resource://
-	let resource = Services.io.getProtocolHandler("resource").QueryInterface(Ci.nsIResProtocolHandler);
-	resource.setSubstitution("superdrag", null);
+	let res = Services.io.getProtocolHandler("resource").QueryInterface(Ci.nsIResProtocolHandler);
+	res.setSubstitution("superdrag", null);
 }
 
 function install(aData, aReason) {

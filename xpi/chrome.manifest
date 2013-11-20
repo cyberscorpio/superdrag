@@ -1,4 +1,4 @@
-content       superdrag               jar:chrome/superdrag.jar!/content/
+content       superdrag               chrome/content/ contentaccessible=yes
 # resource      superdrag               modules/
 # skin          superdrag  classic/1.0  themes/
 

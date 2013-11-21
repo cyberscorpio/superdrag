@@ -11,21 +11,63 @@ Cu.import("resource://gre/modules/Services.jsm");
 
 var SuperDrag = new function() {
 	var that = this;
-	var pcMsgs = {
-		'dragstart': onStart,
-		'dragover': onDragOver,
-		'drop': onDrop,
-		'dragend': onDragEnd,
+	var defHandlers = {
+		'dragstart': defOnStart,
+		'dragover': defOnDragOver,
+		'drop': defOnDrop,
+		'dragend': defOnDragEnd,
 	};
-	var panelMsgs = {
+	var panelHandlers = {
 		'dragenter': function(evt) {
-			evt.preventDefault();
+			let t = evt.target;
+//			log('enter ' + t.tagName + ' #' + t.id);
+			t.ownerDocument.defaultView.setTimeout(function() {
+			if (t.classList.contains('superdrag-target')) {
+				t.classList.add('hover');
+			}
+			if (t.parentNode && t.parentNode.classList.contains('superdrag-target')) {
+				t.classList.add('hover');
+				t.parentNode.classList.add('hover');
+			}
+			}, 0);
 		},
 		'dragover': function(evt) {
 			evt.preventDefault();
 		},
-		'drop': function(evt) {
+		'dragleave': function(evt) {
+			let t = evt.target;
+//			log('leave ' + t.tagName + ' #' + t.id);
+			if (t.classList.contains('superdrag-target')) {
+				t.classList.remove('hover');
+			}
+			if (t.parentNode && t.parentNode.classList.contains('superdrag-target')) {
+				t.classList.remove('hover');
+				t.parentNode.classList.remove('hover');
+			}
 		},
+		'drop': function(evt) {
+		//	defOnDrop(evt);
+			evt.preventDefault();
+			evt.stopPropagation();
+		},
+	};
+	var targetHandlers = {
+		/*
+		'dragenter': function(evt) {
+			evt.preventDefault();
+			evt.target.classList.add('hover');
+		},
+		'dragover': function(evt) {
+			evt.preventDefault();
+		},
+		'dragleave': function(evt) {
+			evt.target.classList.remove('hover');
+		},
+		'drop': function(evt) {
+			evt.preventDefault();
+			evt.stopPropagation();
+		},
+		*/
 	};
 	var engines = Cc['@mozilla.org/browser/search-service;1'].getService(Ci.nsIBrowserSearchService);
 
@@ -85,11 +127,11 @@ var SuperDrag = new function() {
 			let tb = doc.getElementById('content'); // TabBrowser
 			if (tb && tb.mPanelContainer) {
 				let pc = tb.mPanelContainer;
-				for (let k in pcMsgs) {
+				for (let k in defHandlers) {
 					if (uninstall) {
-						pc.removeEventListener(k, pcMsgs[k], false);
+						pc.removeEventListener(k, defHandlers[k], false);
 					} else {
-						pc.addEventListener(k, pcMsgs[k], false);
+						pc.addEventListener(k, defHandlers[k], false);
 					}
 				}
 			}
@@ -100,8 +142,16 @@ var SuperDrag = new function() {
 				let panel = doc.getElementById(PANELID);
 				// TODO: remove the event listeners.
 				if (panel) {
-					for (let k in panelMsgs) {
-						panel.removeEventListener(k, panelMsgs[k], false);
+					let targets = panel.getElementsByClassName('superdrag-target');
+					for (let i = 0, j = targets.length; i < j; ++ i) {
+						let t = targets[i];
+						for (let k in targetHandlers) {
+							t.removeEventListener(k, targetHandlers[k], false);
+						}
+					};
+
+					for (let k in panelHandlers) {
+						panel.removeEventListener(k, panelHandlers[k], false);
 					}
 
 					// remove the panel
@@ -135,9 +185,17 @@ var SuperDrag = new function() {
 					observe: function(sub, topic, data) {
 						if (topic == 'xul-overlay-merged') {
 							let panel = doc.getElementById(PANELID);
-							for (let k in panelMsgs) {
-								panel.addEventListener(k, panelMsgs[k], false);
+							for (let k in panelHandlers) {
+								panel.addEventListener(k, panelHandlers[k], false);
 							}
+
+							let targets = panel.getElementsByClassName('superdrag-target');
+							for (let i = 0, j = targets.length; i < j; ++ i) {
+								let t = targets[i];
+								for (let k in targetHandlers) {
+									t.addEventListener(k, targetHandlers[k], false);
+								}
+							};
 						}
 					}
 				});
@@ -157,7 +215,7 @@ var SuperDrag = new function() {
 
 	// -------------------------------------------------------------------------------- 
 	// local functions
-	function onStart(evt) {
+	function defOnStart(evt) {
 		/*
 		var wm = getMainWindow();
 		var tb = wm.document.getElementById('content');
@@ -174,11 +232,11 @@ var SuperDrag = new function() {
 			var doc = getRootDoc(evt.target);
 			startPos = getPosFromElement(evt.target, evt.clientX, evt.clientY);
 		} catch (e) {
-			log(e);
+			Cu.reportError(e);
 		}
 	}
 
-	function onDragOver(evt) {
+	function defOnDragOver(evt) {
 		if (dataset != null) {
 			if (panel == null) {
 				let pos = getPosFromElement(evt.target, evt.clientX, evt.clientY);
@@ -202,7 +260,7 @@ var SuperDrag = new function() {
 		}
 	}
 
-	function onDrop(evt) {
+	function defOnDrop(evt) {
 		if (dataset != null) {
 			evt.preventDefault();
 
@@ -213,7 +271,6 @@ var SuperDrag = new function() {
 				var tb = wm.document.getElementById('content');
 				tb.addTab(data);
 			} else if (key == 'text' || key == 'selection') {
-//				evt.target.ownerDocument.defaultView.alert(data);
 				var engine = engines.currentEngine;
 				var submission = engine.getSubmission(data);
 				var url = submission.uri.spec;
@@ -225,8 +282,9 @@ var SuperDrag = new function() {
 		}
 	}
 
-	function onDragEnd(evt) {
-		afterDrop();
+	function defOnDragEnd(evt) {
+		log('end');
+		afterDrag();
 	}
 
 	function parseDragStartEvent(evt) {
@@ -293,15 +351,19 @@ var SuperDrag = new function() {
 		return d;
 	}
 
-	function afterDrop() {
+	function afterDrag() {
 		dataset = null;
 		startPos = null;
 		try {
 			if (panel) {
+				let hovers = panel.getElementsByClassName('hover');
+				while(hovers.length > 0) {
+					hovers[0].classList.remove('hover');
+				}
 				panel.hidePopup();
 			}
 		} catch (e) {
-			log(e);
+			Cu.reportError(e);
 		}
 		panel = null;
 	}
@@ -352,7 +414,9 @@ var SuperDrag = new function() {
 		}
 	}
 
-
+	// Return the 'processing instruction' element, the caller should
+	// save this instance, and call its parent's 'removeChild()' to
+	// remove it when needed (for cleanup).
 	function addStyle(doc, href) {
 		var s = doc.createProcessingInstruction("xml-stylesheet", 'href="' + href + '"');
 		doc.insertBefore(s, doc.documentElement);

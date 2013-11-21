@@ -31,4 +31,8 @@
 	box-shadow: inset 0 0 5px #888;
 }
 
+.superdrag-target.hover .superdrag-target-label {
+	color: black;
+}
+
 

@@ -17,6 +17,16 @@ var SuperDrag = new function() {
 		'drop': onDrop,
 		'dragend': onDragEnd,
 	};
+	var panelMsgs = {
+		'dragenter': function(evt) {
+			evt.preventDefault();
+		},
+		'dragover': function(evt) {
+			evt.preventDefault();
+		},
+		'drop': function(evt) {
+		},
+	};
 	var engines = Cc['@mozilla.org/browser/search-service;1'].getService(Ci.nsIBrowserSearchService);
 
 	const PANELID = 'superdrag-panel';
@@ -87,13 +97,18 @@ var SuperDrag = new function() {
 			// 2. panel
 			let appcontent = doc.getElementById('appcontent');
 			if (uninstall) {
-				let panel = doc.getElementById('superdrag-panel');
+				let panel = doc.getElementById(PANELID);
 				// TODO: remove the event listeners.
+				if (panel) {
+					for (let k in panelMsgs) {
+						panel.removeEventListener(k, panelMsgs[k], false);
+					}
 
-				// remove the panel
-				if (panel && panel.parentNode) {
-					panel.parentNode.removeChild(panel);
-					log('panel removed');
+					// remove the panel
+					if (panel.parentNode) {
+						panel.parentNode.removeChild(panel);
+						log('panel removed');
+					}
 				}
 
 				// remove the style
@@ -116,9 +131,17 @@ var SuperDrag = new function() {
 				};
 
 				// insert the panel
-				doc.loadOverlay('chrome://superdrag/content/dragPanel.xul', null);
+				doc.loadOverlay('chrome://superdrag/content/dragPanel.xul', {
+					observe: function(sub, topic, data) {
+						if (topic == 'xul-overlay-merged') {
+							let panel = doc.getElementById(PANELID);
+							for (let k in panelMsgs) {
+								panel.addEventListener(k, panelMsgs[k], false);
+							}
+						}
+					}
+				});
 
-				// TODO: add event listeners.
 			}
 		} catch (e) {
 			Cu.reportError(e);
@@ -165,8 +188,12 @@ var SuperDrag = new function() {
 					let wm = getMainWindow();
 					panel = wm.document.getElementById(PANELID);
 					if (panel != null) {
-						let appcontent = wm.document.getElementById('appcontent');
-						panel.openPopup(appcontent, 'start_before', -400, 0);
+						let anchor = wm.document.getElementById('content');
+						let rc = anchor.getBoundingClientRect();
+						panel.openPopupAtScreen(-1000, -1000);
+						panel.moveTo(wm.screenX + rc.right - panel.scrollWidth - 40, wm.screenY + rc.top);
+						// panel.openPopupAtScreen(wm.screenX + rc.right - panel.scrollWidth - 20, wm.screenY + rc.top);
+						// panel.openPopupAtScreen(evt.screenX, evt.screenY);
 					}
 				}
 			}
@@ -334,17 +361,28 @@ var SuperDrag = new function() {
 
 	function dump(o, arg) {
 		for (var k in o) {
-			var prefix = '    ';
-			if (arg == 'f') {
-				if (typeof o[k] == 'function') {
-					prefix = '    (f)';
+			try {
+				var prefix = '    ';
+				if (arg == 'f') {
+					if (typeof o[k] == 'function') {
+						prefix = '    (f)';
+						log(prefix + k + ':\t\t' + o[k]);
+					}
+				} else if (arg == 'number') {
+					if (typeof o[k] == 'function' || o[k] == null || o[k].toString().indexOf('[object ') == 0) {
+						continue;
+					}
+					log(prefix + k + ':\t\t' + o[k]);
+				} else {
+					if (typeof o[k] == 'function') {
+						continue;
+					}
 					log(prefix + k + ':\t\t' + o[k]);
 				}
-			} else {
-				if (typeof o[k] == 'function') {
-					continue;
-				}
-				log(prefix + k + ':\t\t' + o[k]);
+			} catch (e) {
+				Cu.reportError(e);
+				log('key = ' + k);
+				continue;
 			}
 		}
 		log(o + (o.tagName === undefined ? '' : ' (' + o.tagName + ')'));

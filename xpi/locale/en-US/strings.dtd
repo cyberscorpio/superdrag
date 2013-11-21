@@ -1,1 +1,8 @@
 <!ENTITY superdrag.title "Super Drag">
+
+<!ENTITY superdrag.link "Link">
+<!ENTITY superdrag.text "Text">
+<!ENTITY superdrag.image "Image">
+<!ENTITY superdrag.cancel "Cancel">
+
+<!ENTITY superdrag.panel.hint "Drop to: ">

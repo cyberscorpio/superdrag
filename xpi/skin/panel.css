@@ -1,5 +1,34 @@
-#superdrag-panel {
-	width: 200px;
-	height: 400px;
-	background-color: #f00;
+@font-face {
+	font-family: 'iconfont';
+	src: url('iconfont.ttf') format('truetype'); /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
 }
+
+#superdrag-panel {
+	padding: 2px 5px;
+}
+
+#superdrag-title-bar {
+	font-size: 1.2em;
+}
+
+.superdrag-target {
+	width: 64px;
+	height: 48px;
+	margin: 5px;
+
+	border: 1px solid transparent;
+}
+
+.superdrag-target-label {
+	font-family:"iconfont";
+	text-align: center;
+	font-size: 32px;
+	color: #ccc;
+}
+
+.superdrag-target.hover {
+	border-color: #ccc;
+	box-shadow: inset 0 0 5px #888;
+}
+
+

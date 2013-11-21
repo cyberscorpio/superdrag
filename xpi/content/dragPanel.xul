@@ -6,6 +6,50 @@
 >
 <vbox id="appcontent">
 	<panel id="superdrag-panel">
+		<vbox>
+			<hbox id="superdrag-title-bar">
+				<label value="&superdrag.panel.hint;" />
+				<label flex="1" id="superdrag-action-desc" />
+			</hbox>
+			<label value="&superdrag.link;" />
+			<hbox>
+				<vbox id="superdrag-link-tab-new" flex="1" pack="center" class="superdrag-target">
+					<label class="superdrag-target-label" value="&#x3632;" />
+				</vbox>
+
+				<vbox id="superdrag-link-tab-selected" flex="1" pack="center" class="superdrag-target">
+					<label class="superdrag-target-label" value="&#x35eb;" />
+				</vbox>
+
+				<vbox id="superdrag-link-tab-current" flex="1" pack="center" class="superdrag-target">
+					<label class="superdrag-target-label" value="&#x35e4;" />
+				</vbox>
+
+			</hbox>
+			<label value="&superdrag.text;" />
+			<hbox>
+				<vbox id="superdrag-text-search" flex="1" pack="center" class="superdrag-target">
+					<label class="superdrag-target-label" value="&#x355d;" />
+				</vbox>
+			</hbox>
+			<label value="&superdrag.image;" />
+			<hbox>
+				<vbox id="superdrag-image-tab-new" flex="1" pack="center" class="superdrag-target">
+					<label class="superdrag-target-label" value="&#x3632;" />
+				</vbox>
+				<vbox id="superdrag-image-tab-selected" flex="1" pack="center" class="superdrag-target">
+					<label class="superdrag-target-label" value="&#x35eb;" />
+				</vbox>
+				<vbox id="superdrag-image-tab-save" flex="1" pack="center" class="superdrag-target">
+					<label class="superdrag-target-label" value="&#x3562;" />
+				</vbox>
+			</hbox>
+			<hbox>
+				<vbox id="superdrag-cancel" flex="1" pack="center" class="superdrag-target">
+					<label class="superdrag-target-label" value="&#x35bd;" />
+				</vbox>
+			</hbox>
+		</vbox>
 	</panel>
 </vbox>
 

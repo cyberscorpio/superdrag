@@ -3,36 +3,96 @@
 	src: url('iconfont.ttf') format('truetype'); /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
 }
 
+.hide {
+	display: none !important;
+}
+
 #superdrag-panel {
 	padding: 2px 5px;
+	width: 226px; /* get the value from superdrag.js::openPanel() */
 }
 
 #superdrag-title-bar {
-	font-size: 1.2em;
+	margin: .5em 0;
+}
+
+#superdrag-action-desc {
+	font-weight: bold;
+}
+
+/*
+.superdrag-category:nth-child(2n) {
+	background-color: #eee;
+}
+*/
+
+.superdrag-category-desc {
+	color: #ccc;
 }
 
 .superdrag-target {
 	width: 64px;
-	height: 48px;
-	margin: 5px;
+	height: 40px;
+	margin: 2px 4px;
 
 	border: 1px solid transparent;
-}
-
-.superdrag-target-label {
-	font-family:"iconfont";
-	text-align: center;
-	font-size: 32px;
-	color: #ccc;
+	border: 1px solid #eee;
 }
 
 .superdrag-target.hover {
 	border-color: #ccc;
 	box-shadow: inset 0 0 5px #888;
+	transition-duration: 250ms;
+	transition-property: border-color, box-shadow;
 }
 
-.superdrag-target.hover .superdrag-target-label {
+.superdrag-target:after {
+	font-family:"iconfont";
+	width: 100%;
+	height: 100%;
+	content: "\35e4";
+	text-align: center;
+	font-size: 36px;
+	color: #ccc;
+	display: block;
+}
+
+.superdrag-target.hover:after {
 	color: black;
 }
+
+#superdrag-link-tab-new:after {
+	content: "\3632";
+}
+
+#superdrag-link-tab-selected:after {
+	content: "\35eb";
+}
+
+#superdrag-link-tab-current:after {
+	content: "\35e4";
+}
+
+#superdrag-text-search:after {
+	content: "\355d";
+}
+
+#superdrag-image-tab-new:after {
+	content: "\3632";
+}
+
+#superdrag-image-tab-selected:after {
+	content: "\35eb";
+}
+
+#superdrag-image-tab-save:after {
+	content: "\3562";
+}
+
+#superdrag-cancel:after {
+	content: "\35bd";
+}
+
+
 
 

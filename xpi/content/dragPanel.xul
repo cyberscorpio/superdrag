@@ -1,4 +1,5 @@
-<?xml version="1.0"?>
+<?xml version="1.0"?><!-- vim: tabstop=2
+-->
 <!DOCTYPE overlay SYSTEM "chrome://superdrag/locale/strings.dtd">
 <overlay id="superdrag"
 	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
@@ -8,47 +9,59 @@
 	<panel id="superdrag-panel">
 		<vbox>
 			<hbox id="superdrag-title-bar">
-				<label value="&superdrag.panel.hint;" />
-				<label flex="1" id="superdrag-action-desc" />
+				<!-- <label value="&superdrag.panel.hint;" /> -->
+				<label flex="1" width="0" crop="end" id="superdrag-action-desc" />
 			</hbox>
-			<label value="&superdrag.link;" />
-			<hbox>
-				<vbox id="superdrag-link-tab-new" flex="1" pack="center" class="superdrag-target">
-					<label class="superdrag-target-label" value="&#x3632;" />
-				</vbox>
 
-				<vbox id="superdrag-link-tab-selected" flex="1" pack="center" class="superdrag-target">
-					<label class="superdrag-target-label" value="&#x35eb;" />
-				</vbox>
+			<vbox class="superdrag-category" id="superdrag-link">
+				<hbox>
+					<label value="&superdrag.link;:" />
+					<label id="superdrag-link-desc" class="superdrag-category-desc" width="0" crop="center" flex="1" />
+				</hbox>
+				<hbox>
+					<vbox id="superdrag-link-tab-new" flex="1" pack="center" class="superdrag-target">
+					</vbox>
+	
+					<vbox id="superdrag-link-tab-selected" flex="1" pack="center" class="superdrag-target">
+					</vbox>
+	
+					<vbox id="superdrag-link-tab-current" flex="1" pack="center" class="superdrag-target">
+					</vbox>
+				</hbox>
+			</vbox>
 
-				<vbox id="superdrag-link-tab-current" flex="1" pack="center" class="superdrag-target">
-					<label class="superdrag-target-label" value="&#x35e4;" />
-				</vbox>
+			<vbox class="superdrag-category" id="superdrag-text">
+				<hbox>
+					<label value="&superdrag.text;:" />
+					<label id="superdrag-text-desc" class="superdrag-category-desc" width="0" crop="center" flex="1" />
+				</hbox>
+				<hbox>
+					<vbox id="superdrag-text-search" flex="1" pack="center" class="superdrag-target">
+					</vbox>
+				</hbox>
+			</vbox>
 
-			</hbox>
-			<label value="&superdrag.text;" />
-			<hbox>
-				<vbox id="superdrag-text-search" flex="1" pack="center" class="superdrag-target">
-					<label class="superdrag-target-label" value="&#x355d;" />
-				</vbox>
-			</hbox>
-			<label value="&superdrag.image;" />
-			<hbox>
-				<vbox id="superdrag-image-tab-new" flex="1" pack="center" class="superdrag-target">
-					<label class="superdrag-target-label" value="&#x3632;" />
-				</vbox>
-				<vbox id="superdrag-image-tab-selected" flex="1" pack="center" class="superdrag-target">
-					<label class="superdrag-target-label" value="&#x35eb;" />
-				</vbox>
-				<vbox id="superdrag-image-tab-save" flex="1" pack="center" class="superdrag-target">
-					<label class="superdrag-target-label" value="&#x3562;" />
-				</vbox>
-			</hbox>
-			<hbox>
-				<vbox id="superdrag-cancel" flex="1" pack="center" class="superdrag-target">
-					<label class="superdrag-target-label" value="&#x35bd;" />
-				</vbox>
-			</hbox>
+			<vbox class="superdrag-category" id="superdrag-image">
+				<hbox>
+					<label value="&superdrag.image;:" />
+					<label id="superdrag-image-desc" class="superdrag-category-desc" width="0" crop="center" flex="1" />
+				</hbox>
+				<hbox>
+					<vbox id="superdrag-image-tab-new" flex="1" pack="center" class="superdrag-target">
+					</vbox>
+					<vbox id="superdrag-image-tab-selected" flex="1" pack="center" class="superdrag-target">
+					</vbox>
+					<vbox id="superdrag-image-tab-save" flex="1" pack="center" class="superdrag-target">
+					</vbox>
+				</hbox>
+			</vbox>
+
+			<vbox class="superdrag-category">
+				<hbox>
+					<vbox id="superdrag-cancel" flex="1" pack="center" class="superdrag-target">
+					</vbox>
+				</hbox>
+			</vbox>
 		</vbox>
 	</panel>
 </vbox>

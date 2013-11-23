@@ -37,6 +37,8 @@
 				</hbox>
 				<hbox>
 					<vbox id="superdrag-text-search" flex="1" pack="center" class="superdrag-target">
+						<menupopup id="superdrag-text-search-engines">
+						</menupopup>
 					</vbox>
 				</hbox>
 			</vbox>

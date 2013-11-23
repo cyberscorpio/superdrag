@@ -13,6 +13,8 @@ var SuperDrag = new function() {
 	const PANELID = 'superdrag-panel';
 	let that = this;
 	let gUrlPattern = /^https?:\/\/w{0,3}\w*?\.(\w*?\.)?\w{2,3}\S*|www\.(\w*?\.)?\w*?\.\w{2,3}\S*|(\w*?\.)?\w*?\.\w{2,3}[\/\?]\S*$/;
+	let gStrSrv = Cc["@mozilla.org/intl/stringbundle;1"].getService(Ci.nsIStringBundleService);
+	gStrSrv.flushBundles(); // to make sure that the new bundle can be loaded correctly
 	let gStr = Cc["@mozilla.org/intl/stringbundle;1"].getService(Ci.nsIStringBundleService).createBundle("chrome://superdrag/locale/strings.properties");
 	let gDefHandlers = {
 		'dragstart': function(evt) {
@@ -58,17 +60,17 @@ var SuperDrag = new function() {
 
 				let key = gDataset['primaryKey'];
 				let data = gDataset[key];
+				let url = '';
 				if (key == 'link' || key == 'image') {
-					let wm = getMainWindow();
-					let tb = wm.document.getElementById('content');
-					tb.addTab(data);
+					url = data;
 				} else if (key == 'text' || key == 'selection') {
 					let engine = gEngines.currentEngine;
 					let submission = engine.getSubmission(data);
-					let url = submission.uri.spec;
+					url = submission.uri.spec;
+				}
 
-					let wm = getMainWindow();
-					let tb = wm.document.getElementById('content');
+				if (url != '') {
+					let tb = getMainWindow().document.getElementById('content');
 					tb.addTab(url);
 				}
 			}
@@ -282,6 +284,14 @@ var SuperDrag = new function() {
 			d['link'] = data;
 			if (el.nodeType == 1 && el.tagName == 'A') {
 				d['primaryKey'] = 'link';
+
+				// TODO: shoud we?
+				let text = el.textContent;
+				if (text == '') {
+					delete d['text'];
+				} else {
+					d['text'] = text;
+				}
 			}
 		}
 
@@ -448,7 +458,7 @@ var SuperDrag = new function() {
 			}
 
 			if (popup == null && tmShow == null) {
-				tmShow = win.setTimeout(showMenu, 500);
+				tmShow = win.setTimeout(showMenu, 1000);
 			}
 
 			if (popup) {
@@ -485,8 +495,13 @@ var SuperDrag = new function() {
 				return;
 			}
 
+			if (popup == null && tmShow) {
+				win.clearTimeout(tmShow);
+				tmShow = null;
+			}
+
 			if (popup && tmHide == null) {
-				tmHide = win.setTimeout(hideMenu, 500);
+				tmHide = win.setTimeout(hideMenu, 100);
 			}
 		};
 
@@ -528,7 +543,7 @@ var SuperDrag = new function() {
 					m.setAttribute('s-index', i);
 					menu.appendChild(m);
 				}
-				menu.openPopup(menu.parentNode, 'after_end', 0, 0);
+				menu.openPopup(menu.parentNode, 'after_end', 0, -5);
 				popup = menu;
 			}
 		}
@@ -549,21 +564,21 @@ var SuperDrag = new function() {
 		}
 		switch (id) {
 		case 'superdrag-link-tab-new':
-			return 'Open link in new tab';
+			return getString('sdOpenLinkInNewTab');
 		case 'superdrag-link-tab-selected':
-			return 'Open link in a new foreground tab';
+			return getString('sdOpenLinkInActiveTab');
 		case 'superdrag-link-tab-current':
-			return 'Open link in current tab';
+			return getString('sdOpenLinkInCurrentTab');
 		case 'superdrag-text-search':
-			return 'Search the text';
+			return getString('sdSearchWith').replace('%engine%', gEngines.currentEngine.name);
 		case 'superdrag-image-tab-new':
-			return 'Open image in new tab';
+			return getString('sdOpenImageInNewTab');
 		case 'superdrag-image-tab-selected':
-			return 'Open image in a new foreground tab';
+			return getString('sdOpenImageInActiveTab');
 		case 'superdrag-image-tab-save':
-			return 'Save the image';
+			return getString('sdSaveImage');
 		case 'superdrag-cancel':
-			return 'Cancel';
+			return getString('sdCancel');
 		}
 		return '';
 	}

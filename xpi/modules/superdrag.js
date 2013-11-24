@@ -9,11 +9,17 @@ const Cu = Components.utils;
 Cu.import("resource://gre/modules/XPCOMUtils.jsm");
 Cu.import("resource://gre/modules/Services.jsm");
 
+Cu.import("resource://gre/modules/FileUtils.jsm");
+Cu.import("resource://gre/modules/Downloads.jsm");
+Cu.import("resource://gre/modules/debug.js")
+
 var SuperDrag = new function() {
 	const PANELID = 'superdrag-panel';
 	let that = this;
+	// TODO: this pattern doesn't work for '123 www.abc.com'.
 	let gUrlPattern = /^https?:\/\/w{0,3}\w*?\.(\w*?\.)?\w{2,3}\S*|www\.(\w*?\.)?\w*?\.\w{2,3}\S*|(\w*?\.)?\w*?\.\w{2,3}[\/\?]\S*$/;
 	let gStrSrv = Cc["@mozilla.org/intl/stringbundle;1"].getService(Ci.nsIStringBundleService);
+	// TODO: call this function when extension upgrade / downgrade.
 	gStrSrv.flushBundles(); // to make sure that the new bundle can be loaded correctly
 	let gStr = Cc["@mozilla.org/intl/stringbundle;1"].getService(Ci.nsIStringBundleService).createBundle("chrome://superdrag/locale/strings.properties");
 	let gDefHandlers = {
@@ -38,7 +44,9 @@ var SuperDrag = new function() {
 			}
 		},
 		'dragenter': function(evt) {
-			updateActionString(getActionString(null));
+			if (gDataset) {
+				updateActionString(getActionString(null));
+			}
 		},
 		'dragover': function(evt) {
 			if (gDataset != null) {
@@ -76,8 +84,10 @@ var SuperDrag = new function() {
 			}
 		},
 		'dragend': function(evt) {
-			afterDrag();
-			log('drag end @' + (new Date()).toString());
+			if (gDataset) {
+				afterDrag();
+				log('drag end @' + (new Date()).toString());
+			}
 		},
 	};
 	let gPanelHandlers = {
@@ -220,7 +230,6 @@ var SuperDrag = new function() {
 						}
 					}
 				});
-
 			}
 		} catch (e) {
 			Cu.reportError(e);
@@ -250,7 +259,33 @@ var SuperDrag = new function() {
 			// text
 			log('text');
 		} else if (id.indexOf('superdrag-image') == 0) {
-			log('image');
+			if (id == 'superdrag-image-save') {
+				let wm = getMainWindow();
+				let doc = gDataset['document'];
+
+				// I don't know whether it is a bug for the default implement, but
+				// if the image has 'filename=xxxx' in its Content-Disposition and the 
+				// charset of the document is not utf-8, for example, gbk, the problem
+				// occurs since the real document can't be passed to saveImageURL():
+				//  saveImageURL() -> internalSave() -> initFileInfo() -> getDefaultFileName()
+				// -> getCharsetforSave(aDocument), here 'aDocument' is 'null', so
+				// the chrome's default charset will be used and if they don't match,
+				// the file name will be unrecognized characters. 
+				// 
+				// The workaround is to get the charset ahead, then override 'getCharsetforSave'
+				// and restore it after the call of 'saveImageURL()'.
+				let gcfs = wm.getCharsetforSave;
+				let charset = gcfs(doc);
+				wm.getCharsetforSave = function(doc) {
+					return charset;
+				}
+				try {
+					wm.saveImageURL(gDataset['image'], null, "", false, true, doc.documentURIObject, doc);
+				} catch (e) {
+					Cu.reportError(e);
+				}
+				wm.getCharsetforSave = gcfs;
+			}
 		}
 	}
 
@@ -267,6 +302,9 @@ var SuperDrag = new function() {
 		}
 
 		let data = dt.getData('text/plain');
+		if (data.trim) {
+			data = data.trim();
+		}
 		if (data != '') {
 			d['text'] = data;
 			d['primaryKey'] = 'text';
@@ -285,12 +323,23 @@ var SuperDrag = new function() {
 			if (el.nodeType == 1 && el.tagName == 'A') {
 				d['primaryKey'] = 'link';
 
-				// TODO: shoud we?
+				// TODO: shoud we do this?
 				let text = el.textContent;
+				if (text.trim) {
+					text = text.trim();
+				}
 				if (text == '') {
 					delete d['text'];
 				} else {
 					d['text'] = text;
+				}
+			}
+
+			// doesn't support such links
+			if (data.indexOf('javascript:') == 0) {
+				delete d['link'];
+				if (d['primaryKey'] == 'link') {
+					d['primaryKey'] = 'text';
 				}
 			}
 		}
@@ -304,7 +353,9 @@ var SuperDrag = new function() {
 
 		}
 
-		let text = d['selection'] || d['text'];
+		// if user selected something, or if there is no link,
+		// we'll check whether the text itself is a link
+		let text = d['selection'] || (d['link'] ? null : d['text']);
 		if (text) {
 			// TODO: the pattern should work for xxx.com/.net/.info
 			if (gUrlPattern.test(text)) {
@@ -317,6 +368,8 @@ var SuperDrag = new function() {
 		if (d['primaryKey'] === undefined) {
 			return null;
 		}
+
+		d['document'] = el.ownerDocument;
 
 		return d;
 	}
@@ -543,7 +596,7 @@ var SuperDrag = new function() {
 					m.setAttribute('s-index', i);
 					menu.appendChild(m);
 				}
-				menu.openPopup(menu.parentNode, 'after_end', 0, -5);
+				menu.openPopup(menu.parentNode, 'end_before', -5, 0);
 				popup = menu;
 			}
 		}
@@ -559,8 +612,18 @@ var SuperDrag = new function() {
 	};
 
 	function getActionString(id) {
+		NS_ASSERT(gDataset != null, 'to getActionString(), gDataset must be null');
 		if (id === null) {
-			return 'Open link in new tab';
+			// TODO: use 'strings' instead.
+			switch (gDataset['primaryKey']) {
+			case 'link':
+				return 'Open link in new tab';
+			case 'text':
+				return 'Search';
+			case 'image':
+				return 'image';
+			}
+			return '';
 		}
 		switch (id) {
 		case 'superdrag-link-tab-new':
@@ -575,7 +638,7 @@ var SuperDrag = new function() {
 			return getString('sdOpenImageInNewTab');
 		case 'superdrag-image-tab-selected':
 			return getString('sdOpenImageInActiveTab');
-		case 'superdrag-image-tab-save':
+		case 'superdrag-image-save':
 			return getString('sdSaveImage');
 		case 'superdrag-cancel':
 			return getString('sdCancel');
@@ -603,34 +666,44 @@ var SuperDrag = new function() {
 		return s;
 	}
 
+	function getDownloadDir() {
+		return FileUtils.getDir('DfltDwnld', []);
+	}
+
 	function dump(o, arg) {
-		for (let k in o) {
-			try {
-				let prefix = '    ';
-				if (arg == 'f') {
-					if (typeof o[k] == 'function') {
-						prefix = '    (f)';
+		if (o) {
+			for (let k in o) {
+				try {
+					let prefix = '    ';
+					if (arg == 'f') {
+						if (typeof o[k] == 'function') {
+							prefix = '    (f)';
+							log(prefix + k + ':\t\t' + o[k]);
+						}
+					} else if (arg == 'number') {
+						if (typeof o[k] == 'function' || o[k] == null || o[k].toString().indexOf('[object ') == 0) {
+							continue;
+						}
+						log(prefix + k + ':\t\t' + o[k]);
+					} else {
+						if (typeof o[k] == 'function') {
+							continue;
+						}
 						log(prefix + k + ':\t\t' + o[k]);
 					}
-				} else if (arg == 'number') {
-					if (typeof o[k] == 'function' || o[k] == null || o[k].toString().indexOf('[object ') == 0) {
-						continue;
-					}
-					log(prefix + k + ':\t\t' + o[k]);
-				} else {
-					if (typeof o[k] == 'function') {
-						continue;
-					}
-					log(prefix + k + ':\t\t' + o[k]);
+				} catch (e) {
+					Cu.reportError(e);
+					log('key = ' + k);
+					continue;
 				}
-			} catch (e) {
-				Cu.reportError(e);
-				log('key = ' + k);
-				continue;
 			}
+			log(o + (o && o.tagName === undefined ? '' : ' (' + o.tagName + ')'));
+		} else {
+			log(o);
 		}
-		log(o + (o.tagName === undefined ? '' : ' (' + o.tagName + ')'));
 	}
+
+	// dump(OS.Constants.Path);
 
 	return this;
 };

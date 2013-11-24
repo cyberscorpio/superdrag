@@ -33,7 +33,7 @@
 			<vbox class="superdrag-category" id="superdrag-text">
 				<hbox>
 					<label value="&superdrag.text;:" />
-					<label id="superdrag-text-desc" class="superdrag-category-desc" width="0" crop="center" flex="1" />
+					<label id="superdrag-text-desc" class="superdrag-category-desc" width="0" crop="end" flex="1" />
 				</hbox>
 				<hbox>
 					<vbox id="superdrag-text-search" flex="1" pack="center" class="superdrag-target">
@@ -53,7 +53,7 @@
 					</vbox>
 					<vbox id="superdrag-image-tab-selected" flex="1" pack="center" class="superdrag-target">
 					</vbox>
-					<vbox id="superdrag-image-tab-save" flex="1" pack="center" class="superdrag-target">
+					<vbox id="superdrag-image-save" flex="1" pack="center" class="superdrag-target">
 					</vbox>
 				</hbox>
 			</vbox>

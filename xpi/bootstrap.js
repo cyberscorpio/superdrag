@@ -32,7 +32,11 @@ var logger = Cc['@mozilla.org/consoleservice;1'].getService(Ci.nsIConsoleService
 Cu.import("resource://gre/modules/Services.jsm");
 
 function startup(aData, aReason) {
-	if (aReason == ADDON_UPGRADE) {}
+	if (aReason == ADDON_UPGRADE || aReason == ADDON_DOWNGRADE) {
+		// to make sure that the new bundle can be loaded correctly
+		Cc["@mozilla.org/intl/stringbundle;1"].getService(Ci.nsIStringBundleService).flushBundles();
+		logger.logStringMessage('Upgrade / Downgrade');
+	}
 
 	// Register resource://
 	var res = Services.io.getProtocolHandler("resource").QueryInterface(Ci.nsIResProtocolHandler);

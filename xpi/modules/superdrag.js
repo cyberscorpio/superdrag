@@ -18,9 +18,6 @@ var SuperDrag = new function() {
 	let that = this;
 	// TODO: this pattern doesn't work for '123 www.abc.com'.
 	let gUrlPattern = /^https?:\/\/w{0,3}\w*?\.(\w*?\.)?\w{2,3}\S*|www\.(\w*?\.)?\w*?\.\w{2,3}\S*|(\w*?\.)?\w*?\.\w{2,3}[\/\?]\S*$/;
-	let gStrSrv = Cc["@mozilla.org/intl/stringbundle;1"].getService(Ci.nsIStringBundleService);
-	// TODO: call this function when extension upgrade / downgrade.
-	gStrSrv.flushBundles(); // to make sure that the new bundle can be loaded correctly
 	let gStr = Cc["@mozilla.org/intl/stringbundle;1"].getService(Ci.nsIStringBundleService).createBundle("chrome://superdrag/locale/strings.properties");
 	let gDefHandlers = {
 		'dragstart': function(evt) {
@@ -37,7 +34,6 @@ var SuperDrag = new function() {
 					return;
 				}
 
-				let doc = getRootDoc(evt.target);
 				gPos = getPosFromElement(evt.target, evt.clientX, evt.clientY);
 			} catch (e) {
 				Cu.reportError(e);
@@ -68,18 +64,10 @@ var SuperDrag = new function() {
 
 				let key = gDataset['primaryKey'];
 				let data = gDataset[key];
-				let url = '';
 				if (key == 'link' || key == 'image') {
-					url = data;
+					openLink(data, 'new'); // TODO: 'new' or 'active'..
 				} else if (key == 'text' || key == 'selection') {
-					let engine = gEngines.currentEngine;
-					let submission = engine.getSubmission(data);
-					url = submission.uri.spec;
-				}
-
-				if (url != '') {
-					let tb = getMainWindow().document.getElementById('content');
-					tb.addTab(url);
+					searchText(data, -1);
 				}
 			}
 		},
@@ -112,7 +100,11 @@ var SuperDrag = new function() {
 			gSearchEngineMenuManager.onLeave(evt);
 		},
 		'drop': function(evt) {
-			targetOnDrop(evt);
+			if (!gSearchEngineMenuManager.onDrop(evt)) {
+				if (!targetOnDrop(evt)) {
+					gDefHandlers.drop(evt);
+				}
+			}
 			evt.preventDefault();
 			evt.stopPropagation();
 		},
@@ -248,45 +240,46 @@ var SuperDrag = new function() {
 	// local functions
 	function targetOnDrop(evt) {
 		let t = evt.target;
+		/*
 		if (t.parentNode && t.parentNode.classList.contains('superdrag-target')) {
 			t = t.parentNode;
 		}
+		*/
+		if (!t.classList.contains('superdrag-target')) {
+			return false;
+		}
+
 		let id = t.id;
 		if (id.indexOf('superdrag-link') == 0) {
-			// link
-			log('link');
-		} else if (id.indexOf('superdrag-text') == 0) {
-			// text
-			log('text');
-		} else if (id.indexOf('superdrag-image') == 0) {
-			if (id == 'superdrag-image-save') {
-				let wm = getMainWindow();
-				let doc = gDataset['document'];
-
-				// I don't know whether it is a bug for the default implement, but
-				// if the image has 'filename=xxxx' in its Content-Disposition and the 
-				// charset of the document is not utf-8, for example, gbk, the problem
-				// occurs since the real document can't be passed to saveImageURL():
-				//  saveImageURL() -> internalSave() -> initFileInfo() -> getDefaultFileName()
-				// -> getCharsetforSave(aDocument), here 'aDocument' is 'null', so
-				// the chrome's default charset will be used and if they don't match,
-				// the file name will be unrecognized characters. 
-				// 
-				// The workaround is to get the charset ahead, then override 'getCharsetforSave'
-				// and restore it after the call of 'saveImageURL()'.
-				let gcfs = wm.getCharsetforSave;
-				let charset = gcfs(doc);
-				wm.getCharsetforSave = function(doc) {
-					return charset;
+			let url = gDataset['link'];
+			if (url) {
+				if (id == 'superdrag-link-tab-new') {
+					openLink(url, 'new');
+				} else if (id == 'superdrag-link-tab-selected') {
+					openLink(url, 'active');
+				} else { // 'superdrag-link-tab-current':
+					openLink(url, 'current');
 				}
-				try {
-					wm.saveImageURL(gDataset['image'], null, "", false, true, doc.documentURIObject, doc);
-				} catch (e) {
-					Cu.reportError(e);
-				}
-				wm.getCharsetforSave = gcfs;
+				return true;
 			}
+		} else if (id.indexOf('superdrag-text') == 0) {
+			return search(-1);
+		} else if (id.indexOf('superdrag-image') == 0) {
+			let imgurl = gDataset['image'];
+			if (imgurl) {
+				if (id == 'superdrag-image-save') {
+					let doc = gDataset['document'];
+					saveImage(imgurl, doc);
+				} else {
+					openLink(imgurl, id == 'superdrag-image-tab-new' ? 'new' : 'active');
+				}
+				return true;
+			}
+		} else if (id == 'superdrag-cancel') {
+			return true; // do nothing
 		}
+
+		return false;
 	}
 
 	function parseDragStartEvent(evt) {
@@ -369,12 +362,19 @@ var SuperDrag = new function() {
 			return null;
 		}
 
+		d['rootDoc'] = getRootDoc(el);
 		d['document'] = el.ownerDocument;
 
 		return d;
 	}
 
 	function afterDrag() {
+		if (gDataset['document']) {
+			delete gDataset['document'];
+		}
+		if (gDataset['rootDoc']) {
+			delete gDataset['rootDoc'];
+		}
 		gDataset = null;
 		gPos = null;
 		try {
@@ -447,6 +447,66 @@ var SuperDrag = new function() {
 		return s;
 	}
 
+	function openLink(url, how) {
+		NS_ASSERT(gDataset != null, 'gDataset != null');
+		if (how == 'current') {
+			gDataset['rootDoc'].location.href = url;
+		} else {
+			let tb = getMainWindow().document.getElementById('content');
+			let tab = tb.addTab(url);
+			if (how == 'active') {
+				tb.selectedTab = tab;
+			}
+		}
+	}
+
+	function search(index) {
+		let text = gDataset['selection'] || gDataset['text'];
+		if (text) {
+			searchText(text, index);
+			return true;
+		}
+		return false;
+	}
+
+	function searchText(text, index) {
+		let engine = index == -1 ? gEngines.currentEngine : gEngines.getVisibleEngines()[index];
+		let submission = engine.getSubmission(text);
+		url = submission.uri.spec;
+		openLink(url, 'new');
+	}
+
+	function saveImage(imgurl, doc) {
+		let wm = getMainWindow();
+
+		// I don't know whether it is a bug for the default implement, but
+		// if the image has 'filename=xxxx' in its Content-Disposition and the 
+		// charset of the document is not utf-8, for example, gbk, the problem
+		// occurs since the real document can't be passed to saveImageURL():
+		//  saveImageURL() -> internalSave() -> initFileInfo() -> getDefaultFileName()
+		// -> getCharsetforSave(aDocument), here 'aDocument' is 'null', so
+		// the chrome's default charset will be used and if they don't match,
+		// the file name will be unrecognized characters. 
+		// 
+		// The workaround is to get the charset ahead, then override 'getCharsetforSave'
+		// and restore it after the call of 'saveImageURL()'.
+		let gcfs = wm.getCharsetforSave;
+		if (gcfs) {
+			let charset = gcfs(doc);
+			wm.getCharsetforSave = function(doc) {
+				return charset;
+			}
+		}
+		try {
+			wm.saveImageURL(imgurl, null, "", false, true, doc.documentURIObject, doc);
+		} catch (e) {
+			Cu.reportError(e);
+		}
+		if (gcfs) {
+			wm.getCharsetforSave = gcfs;
+		}
+	}
+
 	function openPanel(sX, sY) {
 		let wm = getMainWindow();
 		let doc = wm.document;
@@ -511,7 +571,7 @@ var SuperDrag = new function() {
 			}
 
 			if (popup == null && tmShow == null) {
-				tmShow = win.setTimeout(showMenu, 1000);
+				tmShow = win.setTimeout(showMenu, 750);
 			}
 
 			if (popup) {
@@ -558,6 +618,24 @@ var SuperDrag = new function() {
 			}
 		};
 
+		this.onDrop = function(evt) {
+			let el = evt.target;
+			if (popup == null || gDataset == null || !popup.contains(el)) {
+				return false;
+			}
+
+			while(el && el.tagName != 'menuitem') {
+				el = el.parentNode;
+			}
+
+			if (el) {
+				let index = el.getAttribute('s-index');
+				return search(index);
+			}
+
+			return false;
+		};
+
 		this.onEnd = function() {
 			if (popup) {
 				popup.hidePopup();
@@ -572,7 +650,7 @@ var SuperDrag = new function() {
 			}
 
 			tmShow = tmHide = null;
-		}
+		};
 
 		function showMenu() {
 			tmShow = null;

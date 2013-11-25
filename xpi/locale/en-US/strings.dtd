@@ -7,22 +7,22 @@
 
 <!ENTITY superdrag.options.title "Super Drag Options">
 <!ENTITY superdrag.default.actions.title "Default Actions">
-<!ENTITY superdrag.default.actions.desc "This is what will happen when you drop the drag.">
-<!ENTITY superdrag.action.open.link.in.new.tab "Open link in new tab">
-<!ENTITY superdrag.action.open.link.in.active.tab "Open &amp; select the new tab">
+<!ENTITY superdrag.default.actions.desc "This is what will happen when you release the mouse button.">
+<!ENTITY superdrag.action.open.link.in.new.tab "Open link in new tab (background)">
+<!ENTITY superdrag.action.open.link.in.active.tab "Open link in new tab (foreground)">
 <!ENTITY superdrag.action.open.link.in.current.tab "Open link in current tab">
-<!ENTITY superdrag.action.open.image.in.new.tab "Open image in new tab">
-<!ENTITY superdrag.action.open.image.in.active.tab "Open &amp; select the new tab">
+<!ENTITY superdrag.action.open.image.in.new.tab "Open image in new tab (background)">
+<!ENTITY superdrag.action.open.image.in.active.tab "Open image in new tab (foreground)">
 <!ENTITY superdrag.action.save.image "Save the image">
-<!ENTITY superdrag.panel "Panel">
+<!ENTITY superdrag.panel "Command Panel">
 <!ENTITY superdrag.panel.show.distance "Move distance to show the panel">
 <!ENTITY superdrag.panel.show.distance.hint "In Pixel">
 <!ENTITY superdrag.panel.position "Position of the panel">
 <!ENTITY superdrag.panel.follow.cursor "Follow the cursor">
 <!ENTITY superdrag.panel.top.right "Top &amp; Right corner">
-<!ENTITY superdrag.newtab.behaviors "New tab behaviors">
+<!ENTITY superdrag.newtab.behaviors "New Tab Behaviors">
 <!ENTITY superdrag.newtab.pos "Where to put the new tab">
-<!ENTITY superdrag.newtab.pos.normal "At the end">
+<!ENTITY superdrag.newtab.pos.normal "As the last tab">
 <!ENTITY superdrag.newtab.pos.right "Right to the current tab">
 <!ENTITY superdrag.newtab.pos.left "Left to the current tab">
 <!ENTITY superdrag.newtab.background "Open new tab in background">

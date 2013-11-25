@@ -10,6 +10,7 @@
 #superdrag-panel {
 	padding: 2px 5px;
 	width: 226px; /* get the value from superdrag.js::openPanel() */
+	background-color: white;
 }
 
 #superdrag-title-bar {

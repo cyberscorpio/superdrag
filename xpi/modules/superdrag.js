@@ -2,28 +2,27 @@
 var EXPORTED_SYMBOLS = ["SuperDrag"];
 
 // utils
-const Cc = Components.classes;
-const Ci = Components.interfaces;
-const Cu = Components.utils;
+const {classes: Cc, interfaces: Ci, results: Cr, utils: Cu} = Components;
 
 Cu.import("resource://gre/modules/XPCOMUtils.jsm");
 Cu.import("resource://gre/modules/Services.jsm");
-
 Cu.import("resource://gre/modules/FileUtils.jsm");
 Cu.import("resource://gre/modules/Downloads.jsm");
 Cu.import("resource://gre/modules/debug.js")
 
 var SuperDrag = new function() {
 	const PANELID = 'superdrag-panel';
-	let that = this;
+	const PREF_PREFIX = 'extensions.superdrag.';
 	// TODO: this pattern doesn't work for '123 www.abc.com'.
 	let gUrlPattern = /^https?:\/\/w{0,3}\w*?\.(\w*?\.)?\w{2,3}\S*|www\.(\w*?\.)?\w*?\.\w{2,3}\S*|(\w*?\.)?\w*?\.\w{2,3}[\/\?]\S*$/;
 	let gStr = Cc["@mozilla.org/intl/stringbundle;1"].getService(Ci.nsIStringBundleService).createBundle("chrome://superdrag/locale/strings.properties");
+	let gPref = Cc["@mozilla.org/preferences-service;1"].getService(Ci.nsIPrefBranch);
+	let gDis = 100;
 	let gDefHandlers = {
 		'dragstart': function(evt) {
 			/*
 			var wm = getMainWindow();
-			var tb = wm.document.getElementById('content');
+			var tb = wm.getBrowser();
 			var tab = tb.selectedTab;
 			var browser = tab.linkedBrowser;
 			var doc = browser.contentDocument;
@@ -35,6 +34,8 @@ var SuperDrag = new function() {
 				}
 
 				gPos = getPosFromElement(evt.target, evt.clientX, evt.clientY);
+				gDis = gPref.getIntPref(PREF_PREFIX + 'panel.show.distance');
+				gDis = gDis * gDis;
 			} catch (e) {
 				Cu.reportError(e);
 			}
@@ -50,7 +51,7 @@ var SuperDrag = new function() {
 					let pos = getPosFromElement(evt.target, evt.clientX, evt.clientY);
 					let dx = pos.x - gPos.x;
 					let dy = pos.y - gPos.y;
-					if (dx * dx + dy * dy >= 24400) {
+					if (dx * dx + dy * dy >= gDis) {
 						openPanel(evt.screenX, evt.screenY);
 					}
 				}
@@ -64,8 +65,11 @@ var SuperDrag = new function() {
 
 				let key = gDataset['primaryKey'];
 				let data = gDataset[key];
-				if (key == 'link' || key == 'image') {
-					openLink(data, 'new'); // TODO: 'new' or 'active'..
+				if (key == 'link') {
+					openLink(data, gPref.getCharPref(PREF_PREFIX + 'default.action.link'));
+				} else if (key == 'image') {
+					let action = gPref.getCharPref(PREF_PREFIX + 'default.action.image');
+					action == 'save' ? saveImage(data) : openLink(data, action);
 				} else if (key == 'text' || key == 'selection') {
 					searchText(data, -1);
 				}
@@ -101,7 +105,7 @@ var SuperDrag = new function() {
 		},
 		'drop': function(evt) {
 			if (!gSearchEngineMenuManager.onDrop(evt)) {
-				if (!targetOnDrop(evt)) {
+				if (!dropOnTarget(evt)) {
 					gDefHandlers.drop(evt);
 				}
 			}
@@ -238,13 +242,11 @@ var SuperDrag = new function() {
 
 	// -------------------------------------------------------------------------------- 
 	// local functions
-	function targetOnDrop(evt) {
+
+	// if it doesn't process the event, it returns *false*
+	// otherwise *true* is returned.
+	function dropOnTarget(evt) {
 		let t = evt.target;
-		/*
-		if (t.parentNode && t.parentNode.classList.contains('superdrag-target')) {
-			t = t.parentNode;
-		}
-		*/
 		if (!t.classList.contains('superdrag-target')) {
 			return false;
 		}
@@ -268,8 +270,7 @@ var SuperDrag = new function() {
 			let imgurl = gDataset['image'];
 			if (imgurl) {
 				if (id == 'superdrag-image-save') {
-					let doc = gDataset['document'];
-					saveImage(imgurl, doc);
+					saveImage(imgurl);
 				} else {
 					openLink(imgurl, id == 'superdrag-image-tab-new' ? 'new' : 'active');
 				}
@@ -350,7 +351,7 @@ var SuperDrag = new function() {
 		// we'll check whether the text itself is a link
 		let text = d['selection'] || (d['link'] ? null : d['text']);
 		if (text) {
-			// TODO: the pattern should work for xxx.com/.net/.info
+			// TODO: the pattern should work for xxx.com/.net/.info, etc.
 			if (gUrlPattern.test(text)) {
 				d['link'] = text;
 				d['primaryKey'] = 'link';
@@ -452,8 +453,15 @@ var SuperDrag = new function() {
 		if (how == 'current') {
 			gDataset['rootDoc'].location.href = url;
 		} else {
-			let tb = getMainWindow().document.getElementById('content');
+			let tb = getMainWindow().getBrowser();
 			let tab = tb.addTab(url);
+			let pos = gPref.getCharPref(PREF_PREFIX + 'newtab.pos');
+			let i = tb.tabContainer.getIndexOfItem(tb.selectedTab);
+			if (pos == 'right') {
+				tb.moveTabTo(tab, i + 1);
+			} else if (pos == 'left') {
+				tb.moveTabTo(tab, i - 1);
+			}
 			if (how == 'active') {
 				tb.selectedTab = tab;
 			}
@@ -473,11 +481,12 @@ var SuperDrag = new function() {
 		let engine = index == -1 ? gEngines.currentEngine : gEngines.getVisibleEngines()[index];
 		let submission = engine.getSubmission(text);
 		url = submission.uri.spec;
-		openLink(url, 'new');
+		openLink(url, gPref.getBoolPref(PREF_PREFIX + 'newtab.active') ? 'active' : 'new');
 	}
 
-	function saveImage(imgurl, doc) {
+	function saveImage(imgurl) {
 		let wm = getMainWindow();
+		let doc = gDataset['document'];
 
 		// I don't know whether it is a bug for the default implement, but
 		// if the image has 'filename=xxxx' in its Content-Disposition and the 
@@ -534,12 +543,17 @@ var SuperDrag = new function() {
 			});
 
 			// 2. show the panel
-			let anchor = doc.getElementById('content');
-			let rc = anchor.getBoundingClientRect();
-//			gPanel.openPopupAtScreen(-1000, -1000);
-//			gPanel.moveTo(wm.screenX + rc.right - gPanel.scrollWidth - 40, wm.screenY + rc.top);
-			// gPanel.openPopupAtScreen(wm.screenX + rc.right - gPanel.scrollWidth - 20, wm.screenY + rc.top);
-			gPanel.openPopupAtScreen(sX, sY);
+			let pos = gPref.getIntPref(PREF_PREFIX + 'panel.pos');
+			if (pos == 0) {
+				let offset = gPref.getIntPref(PREF_PREFIX + 'panel.follow.offset');
+				gPanel.openPopupAtScreen(sX + offset, sY + offset);
+			} else {
+				let anchor = doc.getElementById('content');
+				let rc = anchor.getBoundingClientRect();
+				gPanel.openPopupAtScreen(-1000, -1000);
+				gPanel.moveTo(wm.screenX + rc.right - gPanel.scrollWidth - 40, wm.screenY + rc.top);
+				// gPanel.openPopupAtScreen(wm.screenX + rc.right - gPanel.scrollWidth - 20, wm.screenY + rc.top);
+			}
 
 			// DON'T remove them because:
 			//  below code is used to report the width of the panel,
@@ -571,7 +585,7 @@ var SuperDrag = new function() {
 			}
 
 			if (popup == null && tmShow == null) {
-				tmShow = win.setTimeout(showMenu, 750);
+				tmShow = win.setTimeout(showMenu, gPref.getIntPref(PREF_PREFIX + 'popup.show.delay'));
 			}
 
 			if (popup) {
@@ -690,7 +704,7 @@ var SuperDrag = new function() {
 	};
 
 	function getActionString(id) {
-		NS_ASSERT(gDataset != null, 'to getActionString(), gDataset must be null');
+		NS_ASSERT(gDataset != null, 'To getActionString(), gDataset must NOT be null');
 		if (id === null) {
 			// TODO: use 'strings' instead.
 			switch (gDataset['primaryKey']) {
@@ -746,6 +760,31 @@ var SuperDrag = new function() {
 
 	function getDownloadDir() {
 		return FileUtils.getDir('DfltDwnld', []);
+	}
+
+	// not used yet.
+	function config() {
+		let sbprefs = Cc["@mozilla.org/preferences-service;1"].getService(Ci.nsIPrefBranch);
+		let prefObserver = {
+			register: function() {
+				var prefService = Cc["@mozilla.org/preferences-service;1"].getService(Ci.nsIPrefService);
+				this.branch = prefService.getBranch("extensions.superdrag.");
+				this.branch.addObserver("", this, false);
+			},
+
+			unregister: function() {
+				if(!this.branch) {
+					return;
+				}
+				this.branch.removeObserver("", this);
+			},
+
+			observe: function(aSubject, aTopic, aData) {
+				if(aTopic != "nsPref:changed") {
+					return;
+				}
+			}
+		};
 	}
 
 	function dump(o, arg) {

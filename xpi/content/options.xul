@@ -1,231 +1,148 @@
 <?xml version="1.0"?><!-- vim: tabstop=2
 -->
 <?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
-<?xml-stylesheet href="chrome://superstart/content/style/options.css" type="text/css"?>
-<!DOCTYPE dialog SYSTEM "chrome://superstart/locale/main.dtd">
+<!DOCTYPE dialog SYSTEM "chrome://superdrag/locale/strings.dtd">
 
-<dialog id="options"
+<prefwindow id="superdrag-options"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-        minwidth="480"
-        dlgbuttons="accept,cancel"
-        title="&superstart.options;">  
+        title="&superdrag.options.title;">  
+	<prefpane id="general-pane">
+		<preferences>
+			<!-- default action -->
+			<preference class="used" type="string" id="pref-default-action-link" name="extensions.superdrag.default.action.link" />
+			<preference type="string" id="pref-default-action-text" name="extensions.superdrag.default.action.text" />
+			<preference class="used" type="string" id="pref-default-action-image" name="extensions.superdrag.default.action.image" />
 
-	<script type="application/x-javascript" src="chrome://superstart/content/js/utils.js"/>
-	<script type="application/x-javascript" src="chrome://superstart/content/js/objects.js"/>
-	<script type="application/x-javascript" src="chrome://superstart/content/js/options.js"/>
-	<script type="application/x-javascript" src="chrome://superstart/content/js/options.bgimg.js"/>
+			<!-- panel -->
+			<preference class="used" type="int" id="pref-distance" name="extensions.superdrag.panel.show.distance" />
+			<preference class="used" type="int" id="pref-panel-pos" name="extensions.superdrag.panel.pos" />
+			<preference type="int" id="pref-panel-offset" name="extensions.superdrag.panel.follow.offset" />
 
-	<tabbox flex="1" id="option-tabbox">
-		<tabs>
-			<tab label="&superstart.options.general;" />
-			<tab label="&superstart.ui.customize;" />
-			<tab label="&superstart.options.about;" />
-		</tabs>
-		<tabpanels>
-			<!-- general begin -->
-			<tabpanel>
-				<vbox flex="1">
-					<groupbox>
-						<caption label="&superstart.options.sites.setup;" />
-						<checkbox id="load-in-blanktab" label="&superstart.options.load.in.blanktab;" />
-						<checkbox id="set-as-homepage" label="&superstart.options.set.as.homepage;" />
-						<checkbox id="disable-context-menu" label="&superstart.options.disable.context.menu;" />
-						<checkbox id="sites-open-in-newtab" label="&superstart.options.sites.open.in.newtab;" />
-						<checkbox id="sites-open-next-to-current" pack="end" label="&superstart.options.sites.open.next.to.current.tab;" />
-					</groupbox>
+			<!-- new tab behaviors -->
+			<preference class="used" type="string" id="pref-newtab-pos" name="extensions.superdrag.newtab.pos" />
+			<preference class="used" type="bool" id="pref-newtab-active" name="extensions.superdrag.newtab.active" />
 
-					<groupbox>
-						<caption label="&superstart.options.sites.displaysettings;" />
-						<hbox align="center">
-							<label control="sites-col" value="&superstart.options.sites.col;" />
-							<hbox pack="end" flex="1">
-								<menulist id="sites-col" minwidth="160">
-									<menupopup id="sites-col-popup">
-									</menupopup>
-								</menulist>
-							</hbox>
-						</hbox>
-						<checkbox id="sites-use-compactmode" label="&superstart.options.sites.use.compactmode;" />
-						<checkbox id="sites-use-textonly" label="&superstart.options.sites.text.only;" />
-						<checkbox style="display: none" id="sites-use-bg-effect" label="&superstart.options.sites.use.background.effect;" tooltiptext="sorry, it will be enabled again on Firefox 20 or later" disabled="true" />
-					</groupbox>
+			<!-- popup delay -->
+			<preference type="int" id="pref-popup-show-delay" name="extensions.superdrag.popup.show.delay" />
+		</preferences>
 
-					<groupbox style="display: none">
-						<caption label="&superstart.options.navbar;" />
-						<hbox id="navbar-item-wrapper">
-							<checkbox flex="1" class="navbar-item" id="show-recently-closed" label="&superstart.options.navbar.show.recently.closed;" />
-							<checkbox flex="1" class="navbar-item" id="show-add-site" label="&superstart.options.navbar.show.add.site;" />
-							<checkbox flex="1" class="navbar-item" id="show-themes" label="&superstart.options.navbar.show.themes;" />
-							<checkbox flex="1" class="navbar-item" id="show-todo" label="&superstart.options.navbar.show.todo;" />
-						</hbox>
-					</groupbox>
+		<!-- UI -->
+		<groupbox>
+			<caption label="&superdrag.default.actions.title;" />
+			<label value="&superdrag.default.actions.desc;" />
+			<grid>
+				<columns>
+					<column />
+					<column flex="1" />
+				</columns>
+				<rows>
+					<row>
+						<label value="&superdrag.link;: " />
+						<menulist preference="pref-default-action-link">
+							<menupopup>
+								<menuitem label="&superdrag.action.open.link.in.new.tab;" value="new" />
+								<menuitem label="&superdrag.action.open.link.in.active.tab;" value="active" />
+								<menuitem label="&superdrag.action.open.link.in.current.tab;" value="current" />
+							</menupopup>
+						</menulist>
+					</row>
+					<row>
+						<label value="&superdrag.image;: " />
+						<menulist preference="pref-default-action-image">
+							<menupopup>
+								<menuitem label="&superdrag.action.open.image.in.new.tab;" value="new" />
+								<menuitem label="&superdrag.action.open.image.in.active.tab;" value="active" />
+								<menuitem label="&superdrag.action.save.image;" value="save" />
+							</menupopup>
+						</menulist>
+					</row>
+				</rows>
+			</grid>
+		</groupbox>
 
-					<groupbox>
-						<caption label="&superstart.options.show.elements;" />
-						<checkbox id="show-navbar" label="&superstart.options.show.navbar;" />
-							<checkbox id="show-search" label="&superstart.options.navbar.show.searchbox;" />
-						<checkbox id="show-buttons" label="&superstart.options.site.buttons.show.buttons;" />
-						<hbox id="buttons-wrapper">
-							<hbox class="buttons-item-wrapper" tooltiptext="&superstart.options.site.buttons.show.newtab;">
-								<vbox pack="center"><box class="site-button-icon buttons-item" id="icon-newtab" /></vbox>
-								<checkbox class="buttons-item" id="show-newtab" />
-							</hbox>
-							<hbox class="buttons-item-wrapper" tooltiptext="&superstart.options.site.buttons.show.refresh;">
-								<vbox pack="center"><box class="site-button-icon buttons-item" id="icon-refresh" /></vbox>
-								<checkbox class="buttons-item" id="show-refresh" />
-							</hbox>
-							<hbox class="buttons-item-wrapper" tooltiptext="&superstart.options.site.buttons.show.config;">
-								<vbox pack="center"><box class="site-button-icon buttons-item" id="icon-config" /></vbox>
-								<checkbox class="buttons-item" id="show-config" />
-							</hbox>
-							<hbox class="buttons-item-wrapper" tooltiptext="&superstart.options.site.buttons.show.remove;">
-								<vbox pack="center"><box class="site-button-icon buttons-item" id="icon-remove" /></vbox>
-								<checkbox class="buttons-item" id="show-remove" />
-							</hbox>
-							<hbox class="buttons-item-wrapper" tooltiptext="&superstart.options.site.buttons.show.next.snapshot;">
-								<vbox pack="center"><box class="site-button-icon buttons-item" id="icon-next-snapshot" /></vbox>
-								<checkbox class="buttons-item" id="show-next-snapshot" />
-							</hbox>
-						</hbox>
-					</groupbox>
+		<groupbox>
+			<caption label="&superdrag.panel;" />
+			<grid>
+				<columns>
+					<column flex="1" />
+					<column />
+				</columns>
+				<rows>
+					<row>
+						<label value="&superdrag.panel.show.distance;" />
+						<textbox preference="pref-distance" type="number" min="10" max="1000" increment="20" tooltiptext="&superdrag.panel.show.distance.hint;" />
+					</row>
+					<row>
+						<label value="&superdrag.panel.position;" />
+						<menulist preference="pref-panel-pos">
+							<menupopup>
+								<menuitem label="&superdrag.panel.follow.cursor;" value="0" />
+								<menuitem label="&superdrag.panel.top.right;" value="1" />
+							</menupopup>
+						</menulist>
+					</row>
+				</rows>
+			</grid>
+		</groupbox>
 
-					<hbox flex="1" pack="end">
-						<label value="&superstart.options.general.hint;" />
-					</hbox>
-				</vbox>
-			</tabpanel>
-			<!-- general end -->
+		<groupbox>
+			<caption label="&superdrag.newtab.behaviors;" />
+			<grid>
+				<columns>
+					<column />
+					<column flex="1" />
+				</columns>
+				<rows>
+					<row>
+						<label value="&superdrag.newtab.pos;" />
+						<menulist preference="pref-newtab-pos">
+							<menupopup>
+								<menuitem value="normal" label="&superdrag.newtab.pos.normal;" />
+								<menuitem value="right" label="&superdrag.newtab.pos.right;" />
+								<menuitem value="left" label="&superdrag.newtab.pos.left;" />
+							</menupopup>
+						</menulist>
+					</row>
+					<row>
+						<label value="&superdrag.newtab.background;" />
+						<menulist preference="pref-newtab-active">
+							<menupopup>
+								<menuitem value="false" label="&superdrag.yes;" />
+								<menuitem value="true" label="&superdrag.no;" />
+							</menupopup>
+						</menulist>
+					</row>
+				</rows>
+			</grid>
+		</groupbox>
+	</prefpane>
 
-			<!-- customize begin -->
-			<tabpanel>
-				<vbox flex="1">
-					<hbox>
-						<checkbox id="use-customize" label="&superstart.ui.customize.use;" checked="true" />
-						<hbox flex="1" pack="end">
-							<label value="&superstart.ui.customize.howto;" class="text-link" href="http://www.enjoyfreeware.org/superstart/customize" />
-						</hbox>
-					</hbox>
-					<groupbox>
-						<caption label="&superstart.ui.background.image;" />
-						<hbox>
-							<hbox pack="center" width="200">
-								<vbox>
-									<box id="cstm-bg-image-wrapper">
-										<box id="cstm-bg-image" class="cstm-ctrl"></box>
-									</box>
-								</vbox>
-							</hbox>
-							<hbox flex="1" pack="end">
-								<vbox>
-									<hbox>
-										<button label="&superstart.ui.select.image;" id="cstm-select-image" class="cstm-ctrl" />
-										<button label="&superstart.ui.clear.image;" id="cstm-clear-image" class="cstm-ctrl" />
-									</hbox>
-									<button type="menu" class="cstm-ctrl" id="cstm-bg-repeat" label="&superstart.ui.background.repeat;">
-										<menupopup id="cstm-bg-repeat-menu">
-											<menuitem name="rpt" type="radio" value="repeat" label="&superstart.ui.background.repeat.repeat;" />
-											<menuitem name="rpt" type="radio" value="no-repeat" label="&superstart.ui.background.repeat.no.repeat;" />
-											<menuitem name="rpt" type="radio" value="repeat-x" label="&superstart.ui.background.repeat.repeat.horizontal;" />
-											<menuitem name="rpt" type="radio" value="repeat-y" label="&superstart.ui.background.repeat.repeat.vertical;" />
-										</menupopup>
-									</button>
+	<vbox flex="1">
+		<hbox flex="1" pack="end">
+			<button label="&superdrag.reset.all;" id="reset-all"></button>
+		</hbox>
+		<separator />
+		<hbox flex="1" pack="end">
+			<label value="cyberscorpio@gmail.com" />
+		</hbox>
+		<hbox flex="1" pack="end">
+			<label class="text-link" href="http://www.enjoyfreeware.org/superdrag/" tooltiptext="www.enjoyfreeware.org" value="enjoyfreeware.org" />
+		</hbox>
+		<separator />
+	</vbox>
 
-									<button type="menu" class="cstm-ctrl" id="cstm-bg-size" label="&superstart.ui.background.size;">
-										<menupopup id="cstm-bg-size-menu">
-											<menuitem name="size" type="radio" value="auto" label="&superstart.ui.background.size.default;" />
-											<menuitem name="size" type="radio" value="cover" label="&superstart.ui.background.size.cover;" />
-											<menuitem name="size" type="radio" value="contain" label="&superstart.ui.background.size.contain;" />
-										</menupopup>
-									</button>
-
-									<button type="menu" class="cstm-ctrl" id="cstm-bg-position" label="&superstart.ui.background.position;" popup="cstm-bg-position-menu">
-										<panel id="cstm-bg-position-menu" class="cstm-ctrl">
-											<vbox>
-												<hbox>
-													<label value="x: " />
-													<scale id="cstm-bg-x-pos" min="0" max="100" />
-													<box class="bg-pos-value"><label id="cstm-bg-x-pos-value" /></box>
-												</hbox>
-												<hbox>
-													<label value="y: " />
-													<scale id="cstm-bg-y-pos" min="0" max="100" />
-													<box class="bg-pos-value"><label id="cstm-bg-y-pos-value" /></box>
-												</hbox>
-											</vbox>
-										</panel>
-									</button>
-								</vbox>
-							</hbox>
-						</hbox>
-					</groupbox>
-					<groupbox>
-						<caption label="&superstart.ui.colors;" />
-						<vbox>
-							<hbox>
-								<checkbox id="use-bg-color" label="&superstart.ui.background.color.enable;" class="cstm-ctrl" />
-								<hbox flex="1" pack="end" class="bg-color">
-									<textbox id="cstm-bg-color" class="cstm-ctrl" placeholder="#rrggbb/rgb()/rgba()/HTML color name" />
-									<colorpicker id="cstm-bg-color-picker" type="button" tooltiptext="&superstart.ui.background.color.select;" class="cstm-ctrl" />
-								</hbox>
-							</hbox>
-							<hbox>
-								<checkbox id="use-text-color" class="cstm-ctrl" label="&superstart.ui.text.color.enable;" />
-								<hbox flex="1" pack="end">
-									<radiogroup class="cstm-ctrl" id="cstm-text-color">
-										<hbox>
-											<radio label="&superstart.ui.text.color.black;" class="cstm-ctrl text-color" />
-											<radio label="&superstart.ui.text.color.white;" class="cstm-ctrl text-color" />
-										</hbox>
-									</radiogroup>
-									<checkbox id="cstm-text-shadow" class="cstm-ctrl text-color" label="&superstart.ui.text.color.use.shadow;" />
-								</hbox>
-							</hbox>
-						</vbox>
-					</groupbox>
-					<groupbox>
-						<caption label="&superstart.ui.others;" />
-						<hbox>
-							<checkbox id="cstm-transparent" label="&superstart.ui.transparent;" class="cstm-ctrl" />
-							<hbox pack="end" flex="1">
-								<button id="cstm-advanced" label="&superstart.ui.customize.advanced;" class="cstm-ctrl" />
-							</hbox>
-						</hbox>
-					</groupbox>
-				</vbox>
-			</tabpanel>
-			<!-- customize end -->
-
-			<tabpanel>
-				<vbox flex="1">
-					<hbox pack="center">
-						<vbox>
-						<description>In memory of...</description>
-						<image src="images/father.png" id="father" tooltiptext="My father (1947.1 ~ 2013.2), I miss him every day." />
-						</vbox>
-					</hbox>
-					<groupbox>
-						<caption id="version" label="SuperStart" />
-						<hbox>
-							<label value="&superstart.options.author;:" />
-							<hbox flex="1" pack="end">
-								<label value="cyberscorpio (cyberscorpio@gmail.com)" />
-							</hbox>
-						</hbox>
-						<hbox>
-							<label value="&superstart.options.help;:" />
-							<hbox flex="1" pack="end">
-								<label value="Homepage" class="text-link" href="http://www.enjoyfreeware.org/superstart" />
-							</hbox>
-						</hbox>
-						<hbox>
-							<label value="FAQ:" />
-							<hbox flex="1" pack="end">
-								<label value="FAQ" class="text-link" href="http://www.enjoyfreeware.org/superstart/faq" />
-							</hbox>
-						</hbox>
-					</groupbox>
-				</vbox>
-			</tabpanel>
-		</tabpanels>
-	</tabbox>
-</dialog>
+	<script><![CDATA[
+		window.addEventListener('load', function() {
+			window.removeEventListener('load', arguments.callee, false);
+			document.getElementById('reset-all').onclick = function() {
+				var ps = document.getElementsByClassName('used');
+				for (var i = 0; i < ps.length; ++ i) {
+					var p = ps[i];
+					if (p.tagName == 'preference') {
+						p.reset();
+					}
+				}
+			}
+		}, false);
+	]]></script>
+</prefwindow>

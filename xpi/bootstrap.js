@@ -19,13 +19,11 @@
 // const ADDON_UPGRADE     = 7;
 // const ADDON_DOWNGRADE   = 8;
 
-
-const Cc = Components.classes;
-const Ci = Components.interfaces;
-const Cu = Components.utils;
+const {classes: Cc, interfaces: Ci, results: Cr, utils: Cu} = Components;
 
 var SUPERDRAG_MODULES = [
 	'resource://superdrag/superdrag.js',
+	'resource://superdrag/prefloader.js',
 ];
 var logger = Cc['@mozilla.org/consoleservice;1'].getService(Ci.nsIConsoleService);
 
@@ -45,6 +43,9 @@ function startup(aData, aReason) {
 	res.setSubstitution("superdrag", alias);
 
 	// import the component(s)
+	Cu.import('resource://superdrag/prefloader.js'); {
+		PrefLoader.load(aData.installPath, 'defaults.js');
+	}
 	Cu.import('resource://superdrag/superdrag.js');
 
 //	logger.logStringMessage('dump SuperDrag:');
@@ -69,6 +70,7 @@ function shutdown(aData, aReason) {
 	if (aReason == ADDON_UPGRADE) {}
 
 	SuperDrag.shutdown();
+	PrefLoader.clear();
 
 	// Unload the component(s).
 	SUPERDRAG_MODULES.forEach(Cu.unload, Cu);
@@ -76,6 +78,8 @@ function shutdown(aData, aReason) {
 	// Unregister resource://
 	let res = Services.io.getProtocolHandler("resource").QueryInterface(Ci.nsIResProtocolHandler);
 	res.setSubstitution("superdrag", null);
+
+	logger = null;
 }
 
 function install(aData, aReason) {

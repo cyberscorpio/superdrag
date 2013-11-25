@@ -117,19 +117,20 @@
 		</groupbox>
 	</prefpane>
 
-	<vbox flex="1">
-		<hbox flex="1" pack="end">
+	<hbox flex="1">
+		<vbox>
+			<hbox flex="1" pack="start">
+				<label value="cyberscorpio@gmail.com" />
+			</hbox>
+			<hbox flex="1" pack="start">
+				<label class="text-link" href="http://www.enjoyfreeware.org/superdrag/" tooltiptext="www.enjoyfreeware.org" value="enjoyfreeware.org" />
+			</hbox>
+		</vbox>
+		<vbox flex="1" pack="end">
 			<button label="&superdrag.reset.all;" id="reset-all"></button>
-		</hbox>
-		<separator />
-		<hbox flex="1" pack="end">
-			<label value="cyberscorpio@gmail.com" />
-		</hbox>
-		<hbox flex="1" pack="end">
-			<label class="text-link" href="http://www.enjoyfreeware.org/superdrag/" tooltiptext="www.enjoyfreeware.org" value="enjoyfreeware.org" />
-		</hbox>
-		<separator />
-	</vbox>
+		</vbox>
+	</hbox>
+	<separator />
 
 	<script><![CDATA[
 		window.addEventListener('load', function() {

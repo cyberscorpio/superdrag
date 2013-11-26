@@ -21,10 +21,8 @@
 				<hbox>
 					<vbox id="superdrag-link-tab-background" flex="1" pack="center" class="superdrag-target">
 					</vbox>
-	
 					<vbox id="superdrag-link-tab-foreground" flex="1" pack="center" class="superdrag-target">
 					</vbox>
-	
 					<vbox id="superdrag-link-tab-current" flex="1" pack="center" class="superdrag-target">
 					</vbox>
 				</hbox>

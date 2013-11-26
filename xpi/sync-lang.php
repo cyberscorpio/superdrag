@@ -1,6 +1,6 @@
 <?php
 	$srclang = 'en-US';
-	$srcdir = dir('chrome/locale/' . $srclang . '/');
+	$srcdir = dir('locale/' . $srclang . '/');
 
 
 	$src = array();
@@ -16,7 +16,7 @@
 	// print_r($src);
 
 
-	$localedir = dir('chrome/locale/');
+	$localedir = dir('locale/');
 	while($lang = $localedir->read()) {
 		if ($lang == '.' || $lang == '..' || $lang[0] == '.') {// || $lang == $srclang) {
 			continue;

@@ -20,7 +20,7 @@
 
 			<!-- new tab behaviors -->
 			<preference class="used" type="string" id="pref-newtab-pos" name="extensions.superdrag.newtab.pos" />
-			<preference class="used" type="bool" id="pref-newtab-active" name="extensions.superdrag.newtab.active" />
+			<preference class="used" type="bool" id="pref-newtab-foreground" name="extensions.superdrag.newtab.foreground" />
 
 			<!-- popup delay -->
 			<preference type="int" id="pref-popup-show-delay" name="extensions.superdrag.popup.show.delay" />
@@ -42,8 +42,8 @@
 						</vbox>
 						<menulist preference="pref-default-action-link">
 							<menupopup>
-								<menuitem label="&superdrag.action.open.link.in.new.tab;" value="new" />
-								<menuitem label="&superdrag.action.open.link.in.active.tab;" value="active" />
+								<menuitem label="&superdrag.action.open.link.in.background.tab;" value="background" />
+								<menuitem label="&superdrag.action.open.link.in.foreground.tab;" value="foreground" />
 								<menuitem label="&superdrag.action.open.link.in.current.tab;" value="current" />
 							</menupopup>
 						</menulist>
@@ -54,8 +54,8 @@
 						</vbox>
 						<menulist preference="pref-default-action-image">
 							<menupopup>
-								<menuitem label="&superdrag.action.open.image.in.new.tab;" value="new" />
-								<menuitem label="&superdrag.action.open.image.in.active.tab;" value="active" />
+								<menuitem label="&superdrag.action.open.image.in.background.tab;" value="background" />
+								<menuitem label="&superdrag.action.open.image.in.foreground.tab;" value="foreground" />
 								<menuitem label="&superdrag.action.save.image;" value="save" />
 							</menupopup>
 						</menulist>
@@ -117,10 +117,10 @@
 						<vbox pack="center">
 							<label value="&superdrag.newtab.background;" />
 						</vbox>
-						<menulist preference="pref-newtab-active">
+						<menulist preference="pref-newtab-foreground">
 							<menupopup>
-								<menuitem value="false" label="&superdrag.yes;" />
-								<menuitem value="true" label="&superdrag.no;" />
+								<menuitem value="false" label="&superdrag.newtab.background.yes;" />
+								<menuitem value="true" label="&superdrag.newtab.background.no;" />
 							</menupopup>
 						</menulist>
 					</row>

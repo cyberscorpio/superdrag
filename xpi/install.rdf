@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-     xmlns:em="http://www.mozilla.org/2004/em-rdf#">
+		 xmlns:em="http://www.mozilla.org/2004/em-rdf#">
 
 	<Description about="urn:mozilla:install-manifest">
 		<em:id>superdrag@enjoyfreeware.org</em:id>
@@ -19,10 +19,20 @@
 		</em:targetApplication>
 	 
 		<em:name>Super Drag</em:name>
-		<em:creator>dou dehou</em:creator>
+		<em:creator>cyberscorpio</em:creator>
 		<em:description>Surf the web in an easy way.</em:description>
 		<em:optionsURL>chrome://superdrag/content/options.xul</em:optionsURL>
-		<em:homepageURL>http://www.enjoyfreeware.org/superdrag</em:homepageURL>
+		<em:homepageURL>http://www.enjoyfreeware.org/superdrag/</em:homepageURL>
 		<em:iconURL>chrome://superdrag/content/images/superdrag.png</em:iconURL>
+
+		<!-- localized information -->
+		<em:localized>
+			<Description>
+				<em:locale>zh-CN</em:locale>
+				<em:creator>cyberscorpio</em:creator>
+				<em:name>超级拖拽</em:name>
+				<em:description>鼠标在手，天下我有</em:description>
+			</Description>
+		</em:localized>
 	</Description>			
 </RDF>

@@ -8,11 +8,11 @@
 <!ENTITY superdrag.options.title "Super Drag Options">
 <!ENTITY superdrag.default.actions.title "Default Actions">
 <!ENTITY superdrag.default.actions.desc "This is what will happen when you release the mouse button.">
-<!ENTITY superdrag.action.open.link.in.new.tab "Open link in new tab (background)">
-<!ENTITY superdrag.action.open.link.in.active.tab "Open link in new tab (foreground)">
+<!ENTITY superdrag.action.open.link.in.background.tab "Open link in background tab">
+<!ENTITY superdrag.action.open.link.in.foreground.tab "Open link in foreground tab">
 <!ENTITY superdrag.action.open.link.in.current.tab "Open link in current tab">
-<!ENTITY superdrag.action.open.image.in.new.tab "Open image in new tab (background)">
-<!ENTITY superdrag.action.open.image.in.active.tab "Open image in new tab (foreground)">
+<!ENTITY superdrag.action.open.image.in.background.tab "Open image in background tab">
+<!ENTITY superdrag.action.open.image.in.foreground.tab "Open image in foreground tab">
 <!ENTITY superdrag.action.save.image "Save the image">
 <!ENTITY superdrag.panel "Command Panel">
 <!ENTITY superdrag.panel.show.distance "Move distance to show the panel">
@@ -22,10 +22,10 @@
 <!ENTITY superdrag.panel.top.right "Top &amp; Right corner">
 <!ENTITY superdrag.newtab.behaviors "New Tab Behaviors">
 <!ENTITY superdrag.newtab.pos "Where to put the new tab">
-<!ENTITY superdrag.newtab.pos.normal "As the last tab">
-<!ENTITY superdrag.newtab.pos.right "Right to the current tab">
-<!ENTITY superdrag.newtab.pos.left "Left to the current tab">
+<!ENTITY superdrag.newtab.pos.normal "Default (right most)">
+<!ENTITY superdrag.newtab.pos.right "Right to current">
+<!ENTITY superdrag.newtab.pos.left "Left to current">
 <!ENTITY superdrag.newtab.background "Open new tab in background">
-<!ENTITY superdrag.yes "Yes">
-<!ENTITY superdrag.no "No">
+<!ENTITY superdrag.newtab.background.yes "Yes, in background">
+<!ENTITY superdrag.newtab.background.no "No, in foreground">
 <!ENTITY superdrag.reset.all "Reset All">

@@ -252,15 +252,18 @@ var SuperDrag = new function() {
 		}
 
 		let id = t.id;
+		let map = {
+			'superdrag-link-tab-background': 'background',
+			'superdrag-link-tab-foreground': 'foreground',
+			'superdrag-link-tab-current': 'current',
+			'superdrag-image-tab-background': 'background',
+			'superdrag-image-tab-foreground': 'foreground'
+		};
 		if (id.indexOf('superdrag-link') == 0) {
 			let url = gDataset['link'];
 			if (url) {
-				if (id == 'superdrag-link-tab-new') {
-					openLink(url, 'new');
-				} else if (id == 'superdrag-link-tab-selected') {
-					openLink(url, 'active');
-				} else { // 'superdrag-link-tab-current':
-					openLink(url, 'current');
+				if (map[id]) {
+					openLink(url, map[id]);
 				}
 				return true;
 			}
@@ -272,7 +275,9 @@ var SuperDrag = new function() {
 				if (id == 'superdrag-image-save') {
 					saveImage(imgurl);
 				} else {
-					openLink(imgurl, id == 'superdrag-image-tab-new' ? 'new' : 'active');
+					if (map[id]) {
+						openLink(imgurl, map[id]);
+					}
 				}
 				return true;
 			}
@@ -462,7 +467,7 @@ var SuperDrag = new function() {
 			} else if (pos == 'left') {
 				tb.moveTabTo(tab, i - 1);
 			}
-			if (how == 'active') {
+			if (how == 'foreground') {
 				tb.selectedTab = tab;
 			}
 		}
@@ -481,7 +486,7 @@ var SuperDrag = new function() {
 		let engine = index == -1 ? gEngines.currentEngine : gEngines.getVisibleEngines()[index];
 		let submission = engine.getSubmission(text);
 		url = submission.uri.spec;
-		openLink(url, gPref.getBoolPref(PREF_PREFIX + 'newtab.active') ? 'active' : 'new');
+		openLink(url, gPref.getBoolPref(PREF_PREFIX + 'newtab.foreground') ? 'foreground' : 'background');
 	}
 
 	function saveImage(imgurl) {
@@ -718,18 +723,18 @@ var SuperDrag = new function() {
 			return '';
 		}
 		switch (id) {
-		case 'superdrag-link-tab-new':
-			return getString('sdOpenLinkInNewTab');
-		case 'superdrag-link-tab-selected':
-			return getString('sdOpenLinkInActiveTab');
+		case 'superdrag-link-tab-background':
+			return getString('sdOpenLinkInBackgroundTab');
+		case 'superdrag-link-tab-foreground':
+			return getString('sdOpenLinkInForegroundTab');
 		case 'superdrag-link-tab-current':
 			return getString('sdOpenLinkInCurrentTab');
 		case 'superdrag-text-search':
 			return getString('sdSearchWith').replace('%engine%', gEngines.currentEngine.name);
-		case 'superdrag-image-tab-new':
-			return getString('sdOpenImageInNewTab');
-		case 'superdrag-image-tab-selected':
-			return getString('sdOpenImageInActiveTab');
+		case 'superdrag-image-tab-background':
+			return getString('sdOpenImageInBackgroundTab');
+		case 'superdrag-image-tab-foreground':
+			return getString('sdOpenImageInForegroundTab');
 		case 'superdrag-image-save':
 			return getString('sdSaveImage');
 		case 'superdrag-cancel':

@@ -1,0 +1,31 @@
+<!ENTITY superdrag.title "Super Drag">
+
+<!ENTITY superdrag.link "链接">
+<!ENTITY superdrag.text "文本">
+<!ENTITY superdrag.image "图片">
+<!ENTITY superdrag.cancel "取消">
+
+<!ENTITY superdrag.options.title "Super Drag 选项">
+<!ENTITY superdrag.default.actions.title "默认动作">
+<!ENTITY superdrag.default.actions.desc "这是拖放的默认动作">
+<!ENTITY superdrag.action.open.link.in.background.tab "后台打开链接">
+<!ENTITY superdrag.action.open.link.in.foreground.tab "前台打开链接">
+<!ENTITY superdrag.action.open.link.in.current.tab "当前标签页打开链接">
+<!ENTITY superdrag.action.open.image.in.background.tab "后台打开图片">
+<!ENTITY superdrag.action.open.image.in.foreground.tab "前台打开图片">
+<!ENTITY superdrag.action.save.image "保存图片">
+<!ENTITY superdrag.panel "命令面板">
+<!ENTITY superdrag.panel.show.distance "移动多少距离显示面板">
+<!ENTITY superdrag.panel.show.distance.hint "单位是像素">
+<!ENTITY superdrag.panel.position "面板的位置">
+<!ENTITY superdrag.panel.follow.cursor "在光标附近">
+<!ENTITY superdrag.panel.top.right "在窗口右上角">
+<!ENTITY superdrag.newtab.behaviors "新标签页的属性">
+<!ENTITY superdrag.newtab.pos "新标签页的位置">
+<!ENTITY superdrag.newtab.pos.normal "在最后（默认）">
+<!ENTITY superdrag.newtab.pos.right "当前标签页的右侧">
+<!ENTITY superdrag.newtab.pos.left "当前标签页的左侧">
+<!ENTITY superdrag.newtab.background "是否后台打开新标签页">
+<!ENTITY superdrag.newtab.background.yes "好的, 后台打开">
+<!ENTITY superdrag.newtab.background.no "不要，请前台打开">
+<!ENTITY superdrag.reset.all "恢复默认值">

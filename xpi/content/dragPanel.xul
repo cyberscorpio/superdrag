@@ -19,10 +19,10 @@
 					<label id="superdrag-link-desc" class="superdrag-category-desc" width="0" crop="center" flex="1" />
 				</hbox>
 				<hbox>
-					<vbox id="superdrag-link-tab-new" flex="1" pack="center" class="superdrag-target">
+					<vbox id="superdrag-link-tab-background" flex="1" pack="center" class="superdrag-target">
 					</vbox>
 	
-					<vbox id="superdrag-link-tab-selected" flex="1" pack="center" class="superdrag-target">
+					<vbox id="superdrag-link-tab-foreground" flex="1" pack="center" class="superdrag-target">
 					</vbox>
 	
 					<vbox id="superdrag-link-tab-current" flex="1" pack="center" class="superdrag-target">
@@ -49,9 +49,9 @@
 					<label id="superdrag-image-desc" class="superdrag-category-desc" width="0" crop="center" flex="1" />
 				</hbox>
 				<hbox>
-					<vbox id="superdrag-image-tab-new" flex="1" pack="center" class="superdrag-target">
+					<vbox id="superdrag-image-tab-background" flex="1" pack="center" class="superdrag-target">
 					</vbox>
-					<vbox id="superdrag-image-tab-selected" flex="1" pack="center" class="superdrag-target">
+					<vbox id="superdrag-image-tab-foreground" flex="1" pack="center" class="superdrag-target">
 					</vbox>
 					<vbox id="superdrag-image-save" flex="1" pack="center" class="superdrag-target">
 					</vbox>

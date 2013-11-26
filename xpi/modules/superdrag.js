@@ -78,7 +78,7 @@ var SuperDrag = new function() {
 		'dragend': function(evt) {
 			if (gDataset) {
 				afterDrag();
-				log('drag end @' + (new Date()).toString());
+				// log('drag end @' + (new Date()).toString());
 			}
 		},
 	};
@@ -118,7 +118,7 @@ var SuperDrag = new function() {
 
 	// -------------------------------------------------------------------------------- 
 	// methods
-	this.init = function() {
+	this.init = function(reason) {
 		let enumerator = Services.wm.getEnumerator("navigator:browser");
 		while (enumerator.hasMoreElements()) {
 			let win = enumerator.getNext();
@@ -128,6 +128,8 @@ var SuperDrag = new function() {
 		// Listen for new windows
 		let wm = Cc["@mozilla.org/appshell/window-mediator;1"].getService(Ci.nsIWindowMediator);
 		wm.addListener(windowListener);
+
+		checkFirstRun(reason);
 	};
 
 	this.shutdown = function() {
@@ -192,7 +194,7 @@ var SuperDrag = new function() {
 					// remove the panel
 					if (panel.parentNode) {
 						panel.parentNode.removeChild(panel);
-						log('panel removed');
+						// log('panel removed');
 					}
 				}
 
@@ -202,7 +204,7 @@ var SuperDrag = new function() {
 					d.elementsToBeRemoved.forEach(function(el) {
 						if (el && el.parentNode) {
 							el.parentNode.removeChild(el);
-							log('style removed');
+							// log('style removed');
 						}
 					});
 				}
@@ -805,6 +807,46 @@ var SuperDrag = new function() {
 				}
 			}
 		};
+	}
+
+	function checkFirstRun(reason) {
+		if (reason == 7 || reason == 8) { // skip upgrade / downgrade, we'll check it next start
+			return;
+		}
+
+		let vk = PREF_PREFIX + 'version';
+		let ver = gPref.getCharPref(vk);
+		try {
+			let id = 'superdrag@enjoyfreeware.org';
+			Cu.import("resource://gre/modules/AddonManager.jsm");
+			AddonManager.getAddonByID(id, function(addon) {
+				addver = addon.version;
+				if (addver != ver) {
+					let wm = getMainWindow();
+					let tm = wm.setTimeout(function() {
+						wm.removeEventListener('unload', onUnload, false);
+						tm = null;
+						// 1. write the version
+						gPref.setCharPref(vk, addver);
+
+						// 2. open home page
+						openLink('http://www.enjoyfreeware.org/superdrag/', 'foreground');
+					}, 1000);
+
+					function onUnload() {
+						wm.removeEventListener('unload', onUnload, false);
+						if (tm) {
+							wm.clearTimeout(tm);
+							tm = null;
+						}
+					}
+
+					wm.addEventListener('unload', onUnload, false);
+				}
+			});
+		} catch (e) {
+			Cu.reportError(e);
+		}
 	}
 
 	function dump(o, arg) {

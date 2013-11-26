@@ -33,7 +33,6 @@ function startup(aData, aReason) {
 	if (aReason == ADDON_UPGRADE || aReason == ADDON_DOWNGRADE) {
 		// to make sure that the new bundle can be loaded correctly
 		Cc["@mozilla.org/intl/stringbundle;1"].getService(Ci.nsIStringBundleService).flushBundles();
-		logger.logStringMessage('Upgrade / Downgrade');
 	}
 
 	// Register resource://
@@ -57,7 +56,7 @@ function startup(aData, aReason) {
 //		logger.logStringMessage(prefix + k);
 //	}
 
-	SuperDrag.init();
+	SuperDrag.init(aReason);
 }
 
 function shutdown(aData, aReason) {

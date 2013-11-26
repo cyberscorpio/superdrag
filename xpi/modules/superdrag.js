@@ -711,16 +711,31 @@ var SuperDrag = new function() {
 	function getActionString(id) {
 		NS_ASSERT(gDataset != null, 'To getActionString(), gDataset must NOT be null');
 		if (id === null) {
-			// TODO: use 'strings' instead.
-			switch (gDataset['primaryKey']) {
-			case 'link':
-				return 'Open link in new tab';
-			case 'text':
-				return 'Search';
-			case 'image':
-				return 'image';
+			let key = gDataset['primaryKey'];
+			if (key == 'link') {
+				let action = gPref.getCharPref(PREF_PREFIX + 'default.action.link');
+				if (action == 'background') {
+					return getString('sdOpenLinkInBackgroundTab');
+				} else if (action == 'foreground') {
+					return getString('sdOpenLinkInForegroundTab');
+				} else { // 'current'
+					return getString('sdOpenLinkInCurrentTab');
+				}
+			} else if (key == 'text' || key == 'selection') {
+				// let fg = gPref.getBoolPref(PREF_PREFIX + 'newtab.foreground');
+				id = 'superdrag-text-search';
+			} else if (key == 'image') {
+				let action = gPref.getCharPref(PREF_PREFIX + 'default.action.image');
+				if (action == 'background') {
+					return getString('sdOpenImageInBackgroundTab');
+				} else if (action == 'foreground') {
+					return getString('sdOpenImageInForegroundTab');
+				} else { // 'save'
+					return getString('sdSaveImage');
+				}
+			} else {
+				return '';
 			}
-			return '';
 		}
 		switch (id) {
 		case 'superdrag-link-tab-background':

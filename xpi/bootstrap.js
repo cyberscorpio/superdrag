@@ -38,7 +38,6 @@ function startup(aData, aReason) {
 	// Register resource://
 	var res = Services.io.getProtocolHandler("resource").QueryInterface(Ci.nsIResProtocolHandler);
 	var alias = Services.io.newURI(__SCRIPT_URI_SPEC__ + "/../modules/", null, null);
-	logger.logStringMessage(alias.path);
 	res.setSubstitution("superdrag", alias);
 
 	// import the component(s)
@@ -86,5 +85,4 @@ function install(aData, aReason) {
 
 function uninstall(aData, aReason) {
 }
-
 

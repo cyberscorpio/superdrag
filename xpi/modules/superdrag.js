@@ -194,7 +194,6 @@ var SuperDrag = new function() {
 					// remove the panel
 					if (panel.parentNode) {
 						panel.parentNode.removeChild(panel);
-						// log('panel removed');
 					}
 				}
 
@@ -204,7 +203,6 @@ var SuperDrag = new function() {
 					d.elementsToBeRemoved.forEach(function(el) {
 						if (el && el.parentNode) {
 							el.parentNode.removeChild(el);
-							// log('style removed');
 						}
 					});
 				}

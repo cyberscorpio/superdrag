@@ -78,7 +78,7 @@ var SuperDrag = new function() {
 		'dragend': function(evt) {
 			if (gDataset) {
 				afterDrag();
-				// log('drag end @' + (new Date()).toString());
+				// log('----> drag end @' + (new Date()).toString());
 			}
 		},
 	};
@@ -456,7 +456,10 @@ var SuperDrag = new function() {
 	function openLink(url, how) {
 		NS_ASSERT(gDataset != null, 'gDataset != null');
 		if (how == 'current') {
-			gDataset['rootDoc'].location.href = url;
+			let doc = gDataset['rootDoc'];
+			doc.defaultView.setTimeout(function() {
+				doc.location.href = url;
+			}, 1); // '1' to make sure that 'dragend' has already been fired and processed.
 		} else {
 			let tb = getMainWindow().getBrowser();
 			let tab = tb.addTab(url);

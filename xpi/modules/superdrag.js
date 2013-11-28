@@ -152,6 +152,8 @@ var SuperDrag = new function() {
 				domWindow.removeEventListener("load", onLoad, false);
 				if (win.document.documentElement.getAttribute('windowtype') == 'navigator:browser') {
 					inUninstall(win, false);
+
+					gOpenHomepage && gOpenHomepage(win);
 				}
 			}, false);
 		},
@@ -826,31 +828,43 @@ var SuperDrag = new function() {
 			AddonManager.getAddonByID(id, function(addon) {
 				addver = addon.version;
 				if (addver != ver) {
+					// 1. write the version
+					gPref.setCharPref(vk, addver);
+
+					// 2. try to open home page.
 					let wm = getMainWindow();
-					let tm = wm.setTimeout(function() {
-						wm.removeEventListener('unload', onUnload, false);
-						tm = null;
-						// 1. write the version
-						gPref.setCharPref(vk, addver);
-
-						// 2. open home page
-						openLink('http://www.enjoyfreeware.org/superdrag/', 'foreground');
-					}, 1000);
-
-					function onUnload() {
-						wm.removeEventListener('unload', onUnload, false);
-						if (tm) {
-							wm.clearTimeout(tm);
-							tm = null;
-						}
+					if (wm == null) {
+						gOpenHomepage = tryOpenHomepage;
+					} else {
+						tryOpenHomepage(wm);
 					}
-
-					wm.addEventListener('unload', onUnload, false);
 				}
 			});
 		} catch (e) {
 			Cu.reportError(e);
 		}
+	}
+
+	let gOpenHomepage = null;
+	function tryOpenHomepage(wm) {
+		gOpenHomepage = null;
+		let tm = wm.setTimeout(function() {
+			wm.removeEventListener('unload', onUnload, false);
+			tm = null;
+			// open home page
+			let tb = wm.getBrowser();
+			tb.selectedTab = tb.addTab('http://www.enjoyfreeware.org/superdrag/?v=' + addver);
+		}, 2500);
+
+		function onUnload() {
+			wm.removeEventListener('unload', onUnload, false);
+			if (tm) {
+				wm.clearTimeout(tm);
+				tm = null;
+			}
+		}
+
+		wm.addEventListener('unload', onUnload, false);
 	}
 
 	function dump(o, arg) {

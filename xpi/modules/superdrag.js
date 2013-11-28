@@ -461,17 +461,20 @@ var SuperDrag = new function() {
 				doc.location.href = url;
 			}, 1); // '1' to make sure that 'dragend' has already been fired and processed.
 		} else {
-			let tb = getMainWindow().getBrowser();
+			let wm = getMainWindow();
+			let tb = wm.getBrowser();
 			let tab = tb.addTab(url);
 			let pos = gPref.getCharPref(PREF_PREFIX + 'newtab.pos');
 			let i = tb.tabContainer.getIndexOfItem(tb.selectedTab);
 			if (pos == 'right') {
 				tb.moveTabTo(tab, i + 1);
 			} else if (pos == 'left') {
-				tb.moveTabTo(tab, i - 1);
+				tb.moveTabTo(tab, i);
 			}
 			if (how == 'foreground') {
-				tb.selectedTab = tab;
+				wm.setTimeout(function() {
+					tb.selectedTab = tab;
+				}, 0);
 			}
 		}
 	}

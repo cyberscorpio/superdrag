@@ -36,6 +36,7 @@ var SuperDrag = new function() {
 				gPos = getPosFromElement(evt.target, evt.clientX, evt.clientY);
 				gDis = gPref.getIntPref(PREF_PREFIX + 'panel.show.distance');
 				gDis = gDis * gDis;
+
 			} catch (e) {
 				Cu.reportError(e);
 			}
@@ -176,9 +177,9 @@ var SuperDrag = new function() {
 				let pc = tb.mPanelContainer;
 				for (let k in gDefHandlers) {
 					if (uninstall) {
-						pc.removeEventListener(k, gDefHandlers[k], false);
+						pc.removeEventListener(k, gDefHandlers[k], true);
 					} else {
-						pc.addEventListener(k, gDefHandlers[k], false);
+						pc.addEventListener(k, gDefHandlers[k], true);
 					}
 				}
 			}

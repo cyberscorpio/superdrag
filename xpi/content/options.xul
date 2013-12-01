@@ -158,5 +158,10 @@
 				}
 			}
 		}, false);
+
+		window.addEventListener('unload', function() {
+			window.removeEventListener('unload', arguments.callee, false);
+			document.getElementById('reset-all').onclick = null;
+		}, false);
 	]]></script>
 </prefwindow>

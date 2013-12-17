@@ -20,14 +20,17 @@ var SuperDrag = new function() {
 	let gDis = 100;
 	let gDefHandlers = {
 		'dragstart': function(evt) {
-			/*
-			var wm = getMainWindow();
-			var tb = wm.getBrowser();
-			var tab = tb.selectedTab;
-			var browser = tab.linkedBrowser;
-			var doc = browser.contentDocument;
-			*/
+			let wm = getMainWindow();
+			let tb = wm.getBrowser();
+			let tab = tb.selectedTab;
+			let browser = tab.linkedBrowser;
+			let doc = browser.contentDocument;
 			try {
+				let uri = doc.location.href;
+				if (uri.indexOf('about:') == 0 || uri.indexOf('chrome://') == 0) {
+					return;
+				}
+
 				gDataset = parseDragStartEvent(evt);
 				if (gDataset == null) {
 					return;

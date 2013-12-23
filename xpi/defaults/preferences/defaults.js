@@ -8,6 +8,7 @@ pref('extensions.superdrag.panel.follow.offset', 5);
 // default action
 pref('extensions.superdrag.default.action.link', 'background'); // 'background', 'foreground', 'current'
 pref('extensions.superdrag.default.action.text', 'search'); // 'search' only, currently
+pref('extensions.superdrag.default.action.search', 'background'); // 'background', 'foreground', 'current'
 pref('extensions.superdrag.default.action.image', 'background'); // 'background', 'current', 'save'
 
 // new tab

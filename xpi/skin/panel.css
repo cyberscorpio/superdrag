@@ -1,5 +1,5 @@
 @font-face {
-	font-family: 'iconfont';
+	font-family: 'iconfont-1';
 	src: url('iconfont.ttf') format('truetype'); /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
 }
 
@@ -26,13 +26,16 @@
 }
 
 .superdrag-target {
+	/*
 	width: 64px;
+	*/
 	height: 40px;
 	margin: 2px 4px;
 
 	border: 1px solid transparent;
 	border: 1px solid #eee;
 
+	position: relative;
 }
 
 .superdrag-target.hover {
@@ -42,14 +45,18 @@
 	transition-property: border-color, box-shadow;
 }
 
+.superdrag-target:before, 
 .superdrag-target:after {
-	font-family:"iconfont";
+	position: absolute;
+	font-family:"iconfont-1";
 	width: 100%;
 	height: 100%;
 	text-align: center;
 	font-size: 32px;
 	color: #ccc;
 	display: block;
+	top: 0;
+	left: 0;
 }
 
 .superdrag-target.hover:after {
@@ -59,28 +66,53 @@
 #superdrag-link-tab-background:after
 , #superdrag-image-tab-background:after {
 	content: "\3632";
-	margin-top: -2px;
+	margin-top: 0px;
 }
 
 #superdrag-link-tab-foreground:after
 , #superdrag-image-tab-foreground:after {
-	content: "\35eb";
+	content: "\35ec";
+	margin-top: 3px;
 }
 
 #superdrag-link-tab-current:after {
 	content: "\35e4";
+	margin-top: 2px;
 }
 
-#superdrag-text-search:after {
+/*
+#superdrag-text-search-background:before {
+	position: absolute;
+	top: 16px;
+	left: -6px;
+	width: 100%;
+	height: 100%;
+	font-size: 16px;
+	color: #999;
+
+	content: "\35ec";
+}
+*/
+
+#superdrag-text-search-background:after,
+#superdrag-text-search-foreground:after,
+#superdrag-text-search-current:after {
 	content: "\355d";
+	margin-top: 1px;
 }
 
 #superdrag-image-save:after {
 	content: "\3562";
+	margin-top: 2px;
 }
 
 #superdrag-cancel:after {
 	content: "\35bd";
+}
+
+#superdrag-options:after {
+	content: "\356f";
+	margin-top: 3px;
 }
 
 

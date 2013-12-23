@@ -9,7 +9,7 @@ if [ -f superdrag.xpi ] ; then
 	rm superdrag.xpi
 fi
 
-7z a superdrag.xpi * -r -tzip -x!"'" -x!xpi -x!.DS_Store -x!*.vim -x!*.bat -x!*.tmp -x!*.swp -x!*.svn -x!*.zip -x!*.git -x!*.php -x!tags -x!*.xpi -x!*.pdn -x!*.psd  -x!*.idl -x!*.patch -x!bak.*
+7z a superdrag.xpi * -r -tzip -x!"'" -x!xpi -x!.DS_Store -x!*.vim -x!*.bat -x!*.tmp -x!*.swp -x!*.svn -x!*.zip -x!*.git -x!*.php -x!tags -x!*.xpi -x!*.pdn -x!*.psd  -x!*.idl -x!*.patch -x!bak.* -x!test*
 
 # # add other files other the jar into superdrag.xpi
 # 7z a superdrag.xpi * -r -tzip -x!"'" -x!xpi -x!.DS_Store -x!*.vim -x!*.bat -x!*.tmp -x!*.swp -x!*.svn -x!*.zip -x!*.git -x!*.php -x!tags -x!*.xpi -x!*.pdn -x!*.psd  -x!*.idl -x!*.patch -x!chrome/* -x!bak.*

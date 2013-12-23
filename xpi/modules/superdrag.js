@@ -95,7 +95,9 @@ var SuperDrag = new function() {
 			} else {
 				updateActionString(getActionString(null));
 			}
-			gSearchEngineMenuManager.onEnter(evt);
+			gSearchEngineMenuManagers.forEach(function(mm) {
+				mm.onEnter(evt);
+			});
 		},
 		'dragover': function(evt) {
 			evt.preventDefault();
@@ -105,10 +107,18 @@ var SuperDrag = new function() {
 			if (t.classList.contains('superdrag-target')) {
 				t.classList.remove('hover');
 			}
-			gSearchEngineMenuManager.onLeave(evt);
+			gSearchEngineMenuManagers.forEach(function(mm) {
+				mm.onLeave(evt);
+			});
 		},
 		'drop': function(evt) {
-			if (!gSearchEngineMenuManager.onDrop(evt)) {
+			let handled = false;
+			gSearchEngineMenuManagers.forEach(function(mm) {
+				if (mm.onDrop(evt)) {
+					handled = true;
+				}
+			});
+			if (!handled) {
 				if (!dropOnTarget(evt)) {
 					gDefHandlers.drop(evt);
 				}
@@ -244,7 +254,6 @@ var SuperDrag = new function() {
 	let gDataset = null;
 	let gPos = null;
 	let gPanel = null;
-	let gSearchEngineMenu = null;
 
 	// -------------------------------------------------------------------------------- 
 	// local functions
@@ -390,7 +399,9 @@ var SuperDrag = new function() {
 		gDataset = null;
 		gPos = null;
 		try {
-			gSearchEngineMenuManager.onEnd();
+			gSearchEngineMenuManagers.forEach(function(mm) {
+				mm.onEnd();
+			});
 			if (gPanel) {
 				let hovers = gPanel.getElementsByClassName('hover');
 				while(hovers.length > 0) {
@@ -459,7 +470,8 @@ var SuperDrag = new function() {
 		return s;
 	}
 
-	function openLink(url, how) {
+	function openLink(url, how, noref) {
+		log('open link: ' + url);
 		NS_ASSERT(gDataset != null, 'gDataset != null');
 		let mw = getMainWindow();
 		let tb = mw.getBrowser();
@@ -468,10 +480,10 @@ var SuperDrag = new function() {
 			let doc = gDataset['rootDoc'];
 			doc.defaultView.setTimeout(function() {
 				let b = tb.selectedTab.linkedBrowser;
-				b.loadURI(url, ref);
+				noref ? b.loadURI(url) : b.loadURI(url, ref);
 			}, 1); // '1' to make sure that 'dragend' has already been fired and processed.
 		} else {
-			let tab = tb.addTab(url, ref);
+			let tab = noref ? tb.addTab(url) : tb.addTab(url, ref);
 			let pos = gPref.getCharPref(PREF_PREFIX + 'newtab.pos');
 			let i = tb.tabContainer.getIndexOfItem(tb.selectedTab);
 			if (pos == 'right') {
@@ -487,20 +499,21 @@ var SuperDrag = new function() {
 		}
 	}
 
-	function search(index) {
+	function search(index, how) {
 		let text = gDataset['selection'] || gDataset['text'];
 		if (text) {
-			searchText(text, index);
+			how = how || gPref.getCharPref(PREF_PREFIX + 'default.action.search')
+			searchText(text, index, how);
 			return true;
 		}
 		return false;
 	}
 
-	function searchText(text, index) {
+	function searchText(text, index, how) {
 		let engine = index == -1 ? gEngines.currentEngine : gEngines.getVisibleEngines()[index];
 		let submission = engine.getSubmission(text);
 		url = submission.uri.spec;
-		openLink(url, gPref.getBoolPref(PREF_PREFIX + 'newtab.foreground') ? 'foreground' : 'background');
+		openLink(url, how, true);
 	}
 
 	function saveImage(imgurl) {
@@ -585,12 +598,15 @@ var SuperDrag = new function() {
 		}
 	}
 
-	let gSearchEngineMenuManager = new function() {
-		let id = 'superdrag-text-search';
-		let menuid = 'superdrag-text-search-engines';
+	function SearchEngineManager(id) {
+		let menuid = id + '-engines';
 		let popup = null;
 		let tmShow = null;
 		let tmHide = null;
+		let sid = id == 'superdrag-text-search-background' ? 'sdSearchInBackgroundTabWith' : 
+			(id == 'superdrag-text-search-foreground' ? 'sdSearchInForegroundTabWith' : 'sdSearchInCurrentTabWith');
+		let how = id == 'superdrag-text-search-background' ? 'background' : 
+			(id == 'superdrag-text-search-foreground' ? 'foreground' : 'current');
 
 		this.onEnter = function(evt) {
 			let el = evt.target;
@@ -612,7 +628,7 @@ var SuperDrag = new function() {
 					el.setAttribute('_moz-menuactive', true);
 					el.setAttribute('menuactive', true);
 
-					updateActionString(getString('sdSearchWith').replace('%engine%', el.getAttribute('value')));
+					updateActionString(getString(sid).replace('%engine%', el.getAttribute('value')));
 				}
 			}
 
@@ -652,8 +668,18 @@ var SuperDrag = new function() {
 		};
 
 		this.onDrop = function(evt) {
+			if (gDataset == null) {
+				return false;
+			}
+
 			let el = evt.target;
-			if (popup == null || gDataset == null || !popup.contains(el)) {
+			let doc = el.ownerDocument;
+			let p = doc.getElementById(id);
+			if (el === p) {
+				return search(-1, how);
+			}
+
+			if (popup == null || !popup.contains(el)) {
 				return false;
 			}
 
@@ -663,7 +689,7 @@ var SuperDrag = new function() {
 
 			if (el) {
 				let index = el.getAttribute('s-index');
-				return search(index);
+				return search(index, how);
 			}
 
 			return false;
@@ -689,7 +715,7 @@ var SuperDrag = new function() {
 			tmShow = null;
 			if (gPanel && popup == null) {
 				let doc = gPanel.ownerDocument;
-				let menu = doc.getElementById('superdrag-text-search-engines');
+				let menu = doc.getElementById(menuid);
 				while(menu.children.length > 0) {
 					menu.removeChild(menu.firstChild);
 				}
@@ -722,6 +748,12 @@ var SuperDrag = new function() {
 
 	};
 
+	let gSearchEngineMenuManagers = [
+		new SearchEngineManager('superdrag-text-search-background'), 
+		new SearchEngineManager('superdrag-text-search-foreground'), 
+		new SearchEngineManager('superdrag-text-search-current') 
+		    ];
+
 	function getActionString(id) {
 		NS_ASSERT(gDataset != null, 'To getActionString(), gDataset must NOT be null');
 		if (id === null) {
@@ -737,7 +769,7 @@ var SuperDrag = new function() {
 				}
 			} else if (key == 'text' || key == 'selection') {
 				// let fg = gPref.getBoolPref(PREF_PREFIX + 'newtab.foreground');
-				id = 'superdrag-text-search';
+				id = 'superdrag-text-search-background'; // TODO: load it from the pref.
 			} else if (key == 'image') {
 				let action = gPref.getCharPref(PREF_PREFIX + 'default.action.image');
 				if (action == 'background') {
@@ -758,8 +790,12 @@ var SuperDrag = new function() {
 			return getString('sdOpenLinkInForegroundTab');
 		case 'superdrag-link-tab-current':
 			return getString('sdOpenLinkInCurrentTab');
-		case 'superdrag-text-search':
-			return getString('sdSearchWith').replace('%engine%', gEngines.currentEngine.name);
+		case 'superdrag-text-search-background':
+			return getString('sdSearchInBackgroundTabWith').replace('%engine%', gEngines.currentEngine.name);
+		case 'superdrag-text-search-foreground':
+			return getString('sdSearchInForegroundTabWith').replace('%engine%', gEngines.currentEngine.name);
+		case 'superdrag-text-search-current':
+			return getString('sdSearchInCurrentTabWith').replace('%engine%', gEngines.currentEngine.name);
 		case 'superdrag-image-tab-background':
 			return getString('sdOpenImageInBackgroundTab');
 		case 'superdrag-image-tab-foreground':

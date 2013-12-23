@@ -20,8 +20,8 @@ var SuperDrag = new function() {
 	let gDis = 100;
 	let gDefHandlers = {
 		'dragstart': function(evt) {
-			let wm = getMainWindow();
-			let tb = wm.getBrowser();
+			let mw = getMainWindow();
+			let tb = mw.getBrowser();
 			let tab = tb.selectedTab;
 			let browser = tab.linkedBrowser;
 			let doc = browser.contentDocument;
@@ -461,15 +461,17 @@ var SuperDrag = new function() {
 
 	function openLink(url, how) {
 		NS_ASSERT(gDataset != null, 'gDataset != null');
+		let mw = getMainWindow();
+		let tb = mw.getBrowser();
+		let ref = gDataset['document'].documentURIObject;
 		if (how == 'current') {
 			let doc = gDataset['rootDoc'];
 			doc.defaultView.setTimeout(function() {
-				doc.location.href = url;
+				let b = tb.selectedTab.linkedBrowser;
+				b.loadURI(url, ref);
 			}, 1); // '1' to make sure that 'dragend' has already been fired and processed.
 		} else {
-			let wm = getMainWindow();
-			let tb = wm.getBrowser();
-			let tab = tb.addTab(url);
+			let tab = tb.addTab(url, ref);
 			let pos = gPref.getCharPref(PREF_PREFIX + 'newtab.pos');
 			let i = tb.tabContainer.getIndexOfItem(tb.selectedTab);
 			if (pos == 'right') {
@@ -478,7 +480,7 @@ var SuperDrag = new function() {
 				tb.moveTabTo(tab, i);
 			}
 			if (how == 'foreground') {
-				wm.setTimeout(function() {
+				mw.setTimeout(function() {
 					tb.selectedTab = tab;
 				}, 0);
 			}
@@ -502,7 +504,7 @@ var SuperDrag = new function() {
 	}
 
 	function saveImage(imgurl) {
-		let wm = getMainWindow();
+		let mw = getMainWindow();
 		let doc = gDataset['document'];
 
 		// I don't know whether it is a bug for the default implement, but
@@ -516,26 +518,26 @@ var SuperDrag = new function() {
 		// 
 		// The workaround is to get the charset ahead, then override 'getCharsetforSave'
 		// and restore it after the call of 'saveImageURL()'.
-		let gcfs = wm.getCharsetforSave;
+		let gcfs = mw.getCharsetforSave;
 		if (gcfs) {
 			let charset = gcfs(doc);
-			wm.getCharsetforSave = function(doc) {
+			mw.getCharsetforSave = function(doc) {
 				return charset;
 			}
 		}
 		try {
-			wm.saveImageURL(imgurl, null, "", false, true, doc.documentURIObject, doc);
+			mw.saveImageURL(imgurl, null, "", false, true, doc.documentURIObject, doc);
 		} catch (e) {
 			Cu.reportError(e);
 		}
 		if (gcfs) {
-			wm.getCharsetforSave = gcfs;
+			mw.getCharsetforSave = gcfs;
 		}
 	}
 
 	function openPanel(sX, sY) {
-		let wm = getMainWindow();
-		let doc = wm.document;
+		let mw = getMainWindow();
+		let doc = mw.document;
 		gPanel = doc.getElementById(PANELID);
 		if (gPanel != null) {
 			// 1. prepare the panel
@@ -568,8 +570,8 @@ var SuperDrag = new function() {
 				let anchor = doc.getElementById('content');
 				let rc = anchor.getBoundingClientRect();
 				gPanel.openPopupAtScreen(-1000, -1000);
-				gPanel.moveTo(wm.screenX + rc.right - gPanel.scrollWidth - 40, wm.screenY + rc.top);
-				// gPanel.openPopupAtScreen(wm.screenX + rc.right - gPanel.scrollWidth - 20, wm.screenY + rc.top);
+				gPanel.moveTo(mw.screenX + rc.right - gPanel.scrollWidth - 40, mw.screenY + rc.top);
+				// gPanel.openPopupAtScreen(mw.screenX + rc.right - gPanel.scrollWidth - 20, mw.screenY + rc.top);
 			}
 
 			// DON'T remove them because:
@@ -705,7 +707,7 @@ var SuperDrag = new function() {
 					m.setAttribute('s-index', i);
 					menu.appendChild(m);
 				}
-				menu.openPopup(menu.parentNode, 'end_before', -5, 0);
+				menu.openPopup(menu.parentNode, 'end_before', -5, 10);
 				popup = menu;
 			}
 		}
@@ -836,11 +838,11 @@ var SuperDrag = new function() {
 					gPref.setCharPref(vk, addver);
 
 					// 2. try to open home page.
-					let wm = getMainWindow();
-					if (wm == null) {
+					let mw = getMainWindow();
+					if (mw == null) {
 						gOpenHomepage = tryOpenHomepage;
 					} else {
-						tryOpenHomepage(wm);
+						tryOpenHomepage(mw);
 					}
 				}
 			});
@@ -850,25 +852,25 @@ var SuperDrag = new function() {
 	}
 
 	let gOpenHomepage = null;
-	function tryOpenHomepage(wm) {
+	function tryOpenHomepage(mw) {
 		gOpenHomepage = null;
-		let tm = wm.setTimeout(function() {
-			wm.removeEventListener('unload', onUnload, false);
+		let tm = mw.setTimeout(function() {
+			mw.removeEventListener('unload', onUnload, false);
 			tm = null;
 			// open home page
-			let tb = wm.getBrowser();
+			let tb = mw.getBrowser();
 			tb.selectedTab = tb.addTab('http://www.enjoyfreeware.org/superdrag/?v=' + addver);
 		}, 2500);
 
 		function onUnload() {
-			wm.removeEventListener('unload', onUnload, false);
+			mw.removeEventListener('unload', onUnload, false);
 			if (tm) {
-				wm.clearTimeout(tm);
+				mw.clearTimeout(tm);
 				tm = null;
 			}
 		}
 
-		wm.addEventListener('unload', onUnload, false);
+		mw.addEventListener('unload', onUnload, false);
 	}
 
 	function dump(o, arg) {

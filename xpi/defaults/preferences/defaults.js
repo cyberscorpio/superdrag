@@ -12,9 +12,8 @@ pref('extensions.superdrag.default.action.search', 'background'); // 'background
 pref('extensions.superdrag.default.action.image', 'background'); // 'background', 'current', 'save'
 
 // new tab
-// left + active => read, close, then back to the current tab.
-pref('extensions.superdrag.newtab.pos', 'normal'); // 'normal', 'right', 'left'
-pref('extensions.superdrag.newtab.foreground', false); // currently used for search only (maybe we can remove it later)
+pref('extensions.superdrag.newtab.pos', 'default'); // 'default', 'right'
+pref('extensions.superdrag.newtab.onleft.for.foreground', true);
 
 // popup delay
 pref('extensions.superdrag.popup.show.delay', 500); // show the menu after hover such a time interval (in ms)

@@ -22,10 +22,9 @@
 <!ENTITY superdrag.panel.top.right "在窗口右上角">
 <!ENTITY superdrag.newtab.behaviors "新标签页的属性">
 <!ENTITY superdrag.newtab.pos "新标签页的位置">
-<!ENTITY superdrag.newtab.pos.normal "在最后（默认）">
+<!ENTITY superdrag.newtab.pos.default "默认 (最右→_→)">
 <!ENTITY superdrag.newtab.pos.right "当前标签页的右侧">
-<!ENTITY superdrag.newtab.pos.left "当前标签页的左侧">
-<!ENTITY superdrag.newtab.background "是否后台打开新标签页">
-<!ENTITY superdrag.newtab.background.yes "好的, 后台打开">
-<!ENTITY superdrag.newtab.background.no "不要，请前台打开">
+<!ENTITY superdrag.newtab.onleft.for.foreground "新前台标签的位置">
+<!ENTITY superdrag.newtab.onleft.yes "当前标签的左侧">
+<!ENTITY superdrag.newtab.onleft.no "使用上面的设置">
 <!ENTITY superdrag.reset.all "恢复默认值">

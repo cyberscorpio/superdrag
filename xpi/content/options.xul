@@ -20,7 +20,7 @@
 
 			<!-- new tab behaviors -->
 			<preference class="used" type="string" id="pref-newtab-pos" name="extensions.superdrag.newtab.pos" />
-			<preference class="used" type="bool" id="pref-newtab-foreground" name="extensions.superdrag.newtab.foreground" />
+			<preference class="used" type="bool" id="pref-newtab-onleft-for-foreground" name="extensions.superdrag.newtab.onleft.for.foreground" />
 
 			<!-- popup delay -->
 			<preference type="int" id="pref-popup-show-delay" name="extensions.superdrag.popup.show.delay" />
@@ -107,20 +107,19 @@
 						</vbox>
 						<menulist preference="pref-newtab-pos">
 							<menupopup>
-								<menuitem value="normal" label="&superdrag.newtab.pos.normal;" />
+								<menuitem value="default" label="&superdrag.newtab.pos.default;" />
 								<menuitem value="right" label="&superdrag.newtab.pos.right;" />
-								<menuitem value="left" label="&superdrag.newtab.pos.left;" />
 							</menupopup>
 						</menulist>
 					</row>
 					<row>
 						<vbox pack="center">
-							<label value="&superdrag.newtab.background;" />
+							<label value="&superdrag.newtab.onleft.for.foreground;" />
 						</vbox>
-						<menulist preference="pref-newtab-foreground">
+						<menulist preference="pref-newtab-onleft-for-foreground">
 							<menupopup>
-								<menuitem value="false" label="&superdrag.newtab.background.yes;" />
-								<menuitem value="true" label="&superdrag.newtab.background.no;" />
+								<menuitem value="true" label="&superdrag.newtab.onleft.yes;" />
+								<menuitem value="false" label="&superdrag.newtab.onleft.no;" />
 							</menupopup>
 						</menulist>
 					</row>

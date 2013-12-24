@@ -16,7 +16,7 @@ var SuperDrag = new function() {
 	// TODO: this pattern doesn't work for '123 www.abc.com'.
 	let gUrlPattern = /^https?:\/\/w{0,3}\w*?\.(\w*?\.)?\w{2,3}\S*|www\.(\w*?\.)?\w*?\.\w{2,3}\S*|(\w*?\.)?\w*?\.\w{2,3}[\/\?]\S*$/;
 	let gStr = Cc["@mozilla.org/intl/stringbundle;1"].getService(Ci.nsIStringBundleService).createBundle("chrome://superdrag/locale/strings.properties");
-	let gPref = Cc["@mozilla.org/preferences-service;1"].getService(Ci.nsIPrefBranch);
+	// gPref = Cc["@mozilla.org/preferences-service;1"].getService(Ci.nsIPrefBranch);
 	let gDis = 100;
 	let gDefHandlers = {
 		'dragstart': function(evt) {
@@ -37,7 +37,7 @@ var SuperDrag = new function() {
 				}
 
 				gPos = getPosFromElement(evt.target, evt.clientX, evt.clientY);
-				gDis = gPref.getIntPref(PREF_PREFIX + 'panel.show.distance');
+				gDis = Services.prefs.getIntPref(PREF_PREFIX + 'panel.show.distance');
 				gDis = gDis * gDis;
 
 			} catch (e) {
@@ -70,9 +70,9 @@ var SuperDrag = new function() {
 				let key = gDataset['primaryKey'];
 				let data = gDataset[key];
 				if (key == 'link') {
-					openLink(data, gPref.getCharPref(PREF_PREFIX + 'default.action.link'));
+					openLink(data, Services.prefs.getCharPref(PREF_PREFIX + 'default.action.link'));
 				} else if (key == 'image') {
-					let action = gPref.getCharPref(PREF_PREFIX + 'default.action.image');
+					let action = Services.prefs.getCharPref(PREF_PREFIX + 'default.action.image');
 					action == 'save' ? saveImage(data) : openLink(data, action);
 				} else if (key == 'text' || key == 'selection') {
 					searchText(data, -1);
@@ -471,7 +471,6 @@ var SuperDrag = new function() {
 	}
 
 	function openLink(url, how, noref) {
-		log('open link: ' + url);
 		NS_ASSERT(gDataset != null, 'gDataset != null');
 		let mw = getMainWindow();
 		let tb = mw.getBrowser();
@@ -484,25 +483,30 @@ var SuperDrag = new function() {
 			}, 1); // '1' to make sure that 'dragend' has already been fired and processed.
 		} else {
 			let tab = noref ? tb.addTab(url) : tb.addTab(url, ref);
-			let pos = gPref.getCharPref(PREF_PREFIX + 'newtab.pos');
+			let pos = Services.prefs.getCharPref(PREF_PREFIX + 'newtab.pos');
 			let i = tb.tabContainer.getIndexOfItem(tb.selectedTab);
+			let moveTo = tb.tabs.length - 1;
 			if (pos == 'right') {
-				tb.moveTabTo(tab, i + 1);
-			} else if (pos == 'left') {
-				tb.moveTabTo(tab, i);
+				moveTo = i + 1;
 			}
 			if (how == 'foreground') {
+				if (Services.prefs.getBoolPref(PREF_PREFIX + 'newtab.onleft.for.foreground')) {
+					moveTo = i;
+				}
+
 				mw.setTimeout(function() {
 					tb.selectedTab = tab;
 				}, 0);
 			}
+
+			tb.moveTabTo(tab, moveTo);
 		}
 	}
 
 	function search(index, how) {
 		let text = gDataset['selection'] || gDataset['text'];
 		if (text) {
-			how = how || gPref.getCharPref(PREF_PREFIX + 'default.action.search')
+			how = how || Services.prefs.getCharPref(PREF_PREFIX + 'default.action.search')
 			searchText(text, index, how);
 			return true;
 		}
@@ -575,9 +579,9 @@ var SuperDrag = new function() {
 			});
 
 			// 2. show the panel
-			let pos = gPref.getIntPref(PREF_PREFIX + 'panel.pos');
+			let pos = Services.prefs.getIntPref(PREF_PREFIX + 'panel.pos');
 			if (pos == 0) {
-				let offset = gPref.getIntPref(PREF_PREFIX + 'panel.follow.offset');
+				let offset = Services.prefs.getIntPref(PREF_PREFIX + 'panel.follow.offset');
 				gPanel.openPopupAtScreen(sX + offset, sY + offset);
 			} else {
 				let anchor = doc.getElementById('content');
@@ -620,7 +624,7 @@ var SuperDrag = new function() {
 			}
 
 			if (popup == null && tmShow == null) {
-				tmShow = win.setTimeout(showMenu, gPref.getIntPref(PREF_PREFIX + 'popup.show.delay'));
+				tmShow = win.setTimeout(showMenu, Services.prefs.getIntPref(PREF_PREFIX + 'popup.show.delay'));
 			}
 
 			if (popup) {
@@ -759,7 +763,7 @@ var SuperDrag = new function() {
 		if (id === null) {
 			let key = gDataset['primaryKey'];
 			if (key == 'link') {
-				let action = gPref.getCharPref(PREF_PREFIX + 'default.action.link');
+				let action = Services.prefs.getCharPref(PREF_PREFIX + 'default.action.link');
 				if (action == 'background') {
 					return getString('sdOpenLinkInBackgroundTab');
 				} else if (action == 'foreground') {
@@ -768,10 +772,10 @@ var SuperDrag = new function() {
 					return getString('sdOpenLinkInCurrentTab');
 				}
 			} else if (key == 'text' || key == 'selection') {
-				// let fg = gPref.getBoolPref(PREF_PREFIX + 'newtab.foreground');
+				// let fg = Services.prefs.getBoolPref(PREF_PREFIX + 'newtab.foreground');
 				id = 'superdrag-text-search-background'; // TODO: load it from the pref.
 			} else if (key == 'image') {
-				let action = gPref.getCharPref(PREF_PREFIX + 'default.action.image');
+				let action = Services.prefs.getCharPref(PREF_PREFIX + 'default.action.image');
 				if (action == 'background') {
 					return getString('sdOpenImageInBackgroundTab');
 				} else if (action == 'foreground') {
@@ -863,7 +867,7 @@ var SuperDrag = new function() {
 		}
 
 		let vk = PREF_PREFIX + 'version';
-		let ver = gPref.getCharPref(vk);
+		let ver = Services.prefs.getCharPref(vk);
 		try {
 			let id = 'superdrag@enjoyfreeware.org';
 			Cu.import("resource://gre/modules/AddonManager.jsm");
@@ -871,7 +875,7 @@ var SuperDrag = new function() {
 				addver = addon.version;
 				if (addver != ver) {
 					// 1. write the version
-					gPref.setCharPref(vk, addver);
+					Services.prefs.setCharPref(vk, addver);
 
 					// 2. try to open home page.
 					let mw = getMainWindow();

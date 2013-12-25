@@ -588,6 +588,13 @@ var SuperDrag = new function() {
 				}
 			});
 
+			// 1.3 show / hide the 'options' button
+			let opt = doc.getElementById('superdrag-options');
+			if (opt) {
+				let cls = opt.classList;
+				Services.prefs.getBoolPref('extensions.superdrag.panel.show.options') ? cls.remove('hide') : cls.add('hide');
+			}
+
 			// 2. show the panel
 			let pos = Services.prefs.getIntPref('extensions.superdrag.panel.pos');
 			if (pos == 0) {

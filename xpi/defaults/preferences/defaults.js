@@ -5,6 +5,9 @@ pref('extensions.superdrag.panel.show.distance', 120); // the panel will popup a
 pref('extensions.superdrag.panel.pos', 0); // 0: follow the cursor, 1: right top corner.
 pref('extensions.superdrag.panel.follow.offset', 5);
 
+// panel settings
+pref('extensions.superdrag.panel.show.options', true);
+
 // default action
 pref('extensions.superdrag.default.action.link', 'background'); // 'background', 'foreground', 'current'
 pref('extensions.superdrag.default.action.text', 'search'); // 'search' only, currently
@@ -17,3 +20,4 @@ pref('extensions.superdrag.newtab.onleft.for.foreground', true);
 
 // popup delay
 pref('extensions.superdrag.popup.show.delay', 500); // show the menu after hover such a time interval (in ms)
+

@@ -49,16 +49,31 @@
 .superdrag-target:after {
 	position: absolute;
 	font-family:"iconfont-1";
-	width: 100%;
-	height: 100%;
 	text-align: center;
-	font-size: 32px;
-	color: #ccc;
 	display: block;
-	top: 0;
-	left: 0;
 }
 
+.superdrag-target:before {
+	font-size: 16px;
+	bottom: 2px;
+	right: 2px;
+	width: 16px;
+	height: 16px;
+	color: #ccc;
+}
+
+.superdrag-target:after {
+	font-size: 32px;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	color: #ccc;
+}
+
+.superdrag-target.hover:before {
+	color: black;
+}
 .superdrag-target.hover:after {
 	color: black;
 }
@@ -80,19 +95,20 @@
 	margin-top: 2px;
 }
 
-/*
 #superdrag-text-search-background:before {
-	position: absolute;
-	top: 16px;
-	left: -6px;
-	width: 100%;
-	height: 100%;
-	font-size: 16px;
-	color: #999;
-
-	content: "\35ec";
+	content: "\3632";
+	bottom: 3px;
+	right: 0;
 }
-*/
+
+#superdrag-text-search-foreground:before {
+	content: "\35ec";
+	right: 1px;
+}
+
+#superdrag-text-search-current:before {
+	content: "\35e4";
+}
 
 #superdrag-text-search-background:after,
 #superdrag-text-search-foreground:after,

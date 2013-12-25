@@ -2,15 +2,22 @@
 
 <!ENTITY superdrag.link "链接">
 <!ENTITY superdrag.text "文本">
+<!ENTITY superdrag.search "搜索">
 <!ENTITY superdrag.image "图片">
 <!ENTITY superdrag.cancel "取消">
 
 <!ENTITY superdrag.options.title "Super Drag 选项">
 <!ENTITY superdrag.default.actions.title "默认动作">
 <!ENTITY superdrag.default.actions.desc "这是拖放的默认动作">
+
 <!ENTITY superdrag.action.open.link.in.background.tab "后台打开链接">
 <!ENTITY superdrag.action.open.link.in.foreground.tab "前台打开链接">
 <!ENTITY superdrag.action.open.link.in.current.tab "当前标签页打开链接">
+
+<!ENTITY superdrag.action.open.search.in.background.tab "后台打开搜索">
+<!ENTITY superdrag.action.open.search.in.foreground.tab "前台打开搜索">
+<!ENTITY superdrag.action.open.search.in.current.tab "当前标签页中搜索">
+
 <!ENTITY superdrag.action.open.image.in.background.tab "后台打开图片">
 <!ENTITY superdrag.action.open.image.in.foreground.tab "前台打开图片">
 <!ENTITY superdrag.action.save.image "保存图片">

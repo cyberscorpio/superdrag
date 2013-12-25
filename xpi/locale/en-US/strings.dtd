@@ -2,15 +2,22 @@
 
 <!ENTITY superdrag.link "Link">
 <!ENTITY superdrag.text "Text">
+<!ENTITY superdrag.search "Search">
 <!ENTITY superdrag.image "Image">
 <!ENTITY superdrag.cancel "Cancel">
 
 <!ENTITY superdrag.options.title "Super Drag Options">
 <!ENTITY superdrag.default.actions.title "Default Actions">
 <!ENTITY superdrag.default.actions.desc "This is what will happen when you release the mouse button.">
+
 <!ENTITY superdrag.action.open.link.in.background.tab "Open link in background tab">
 <!ENTITY superdrag.action.open.link.in.foreground.tab "Open link in foreground tab">
 <!ENTITY superdrag.action.open.link.in.current.tab "Open link in current tab">
+
+<!ENTITY superdrag.action.open.search.in.background.tab "Search in background tab">
+<!ENTITY superdrag.action.open.search.in.foreground.tab "Search in foreground tab">
+<!ENTITY superdrag.action.open.search.in.current.tab "Search in current tab">
+
 <!ENTITY superdrag.action.open.image.in.background.tab "Open image in background tab">
 <!ENTITY superdrag.action.open.image.in.foreground.tab "Open image in foreground tab">
 <!ENTITY superdrag.action.save.image "Save the image">

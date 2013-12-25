@@ -11,6 +11,7 @@
 			<!-- default action -->
 			<preference class="used" type="string" id="pref-default-action-link" name="extensions.superdrag.default.action.link" />
 			<preference type="string" id="pref-default-action-text" name="extensions.superdrag.default.action.text" />
+			<preference class="used" type="string" id="pref-default-action-search" name="extensions.superdrag.default.action.search" />
 			<preference class="used" type="string" id="pref-default-action-image" name="extensions.superdrag.default.action.image" />
 
 			<!-- panel -->
@@ -45,6 +46,18 @@
 								<menuitem label="&superdrag.action.open.link.in.background.tab;" value="background" />
 								<menuitem label="&superdrag.action.open.link.in.foreground.tab;" value="foreground" />
 								<menuitem label="&superdrag.action.open.link.in.current.tab;" value="current" />
+							</menupopup>
+						</menulist>
+					</row>
+					<row>
+						<vbox pack="center">
+							<label value="&superdrag.search;: " />
+						</vbox>
+						<menulist preference="pref-default-action-search">
+							<menupopup>
+								<menuitem label="&superdrag.action.open.search.in.background.tab;" value="background" />
+								<menuitem label="&superdrag.action.open.search.in.foreground.tab;" value="foreground" />
+								<menuitem label="&superdrag.action.open.search.in.current.tab;" value="current" />
 							</menupopup>
 						</menulist>
 					</row>

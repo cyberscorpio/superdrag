@@ -510,6 +510,9 @@ var SuperDrag = new function() {
 			}
 
 			tb.moveTabTo(tab, moveTo);
+			if (!noref) {
+				tab.owner = null;
+			}
 		}
 	}
 

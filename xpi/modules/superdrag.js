@@ -59,10 +59,8 @@ var SuperDrag = new function() {
 					}
 				}
 
-				if (gDataset['dropToInput']) {
-					if (isInputElement(evt.target)) {
-						return;
-					}
+				if (gDataset['dropToInput'] && isInputElement(evt.target)) {
+					return;
 				}
 	
 				evt.preventDefault();
@@ -70,10 +68,8 @@ var SuperDrag = new function() {
 		},
 		'drop': function(evt) {
 			if (gDataset != null) {
-				if (gDataset['dropToInput']) {
-					if (isInputElement(evt.target)) {
-						return;
-					}
+				if (gDataset['dropToInput'] && isInputElement(evt.target)) {
+					return;
 				}
 
 				let key = gDataset['primaryKey'];

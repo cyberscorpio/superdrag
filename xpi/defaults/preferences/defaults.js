@@ -21,3 +21,6 @@ pref('extensions.superdrag.newtab.onleft.for.foreground', true);
 // popup delay
 pref('extensions.superdrag.popup.show.delay', 500); // show the menu after hover such a time interval (in ms)
 
+// other behaviors
+pref('extensions.superdrag.behavior.drop.to.input', true); // true so user can drag & drop text to an INPUT or TEXTAREA.
+

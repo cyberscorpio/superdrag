@@ -58,13 +58,23 @@ var SuperDrag = new function() {
 						openPanel(evt.screenX, evt.screenY);
 					}
 				}
+
+				if (gDataset['dropToInput']) {
+					if (isInputElement(evt.target)) {
+						return;
+					}
+				}
 	
 				evt.preventDefault();
 			}
 		},
 		'drop': function(evt) {
 			if (gDataset != null) {
-				evt.preventDefault();
+				if (gDataset['dropToInput']) {
+					if (isInputElement(evt.target)) {
+						return;
+					}
+				}
 
 				let key = gDataset['primaryKey'];
 				let data = gDataset[key];
@@ -76,6 +86,8 @@ var SuperDrag = new function() {
 				} else if (key == 'text' || key == 'selection') {
 					searchText(data, -1, Services.prefs.getCharPref('extensions.superdrag.default.action.search'));
 				}
+
+				evt.preventDefault();
 			}
 		},
 		'dragend': function(evt) {
@@ -395,6 +407,7 @@ var SuperDrag = new function() {
 
 		d['rootDoc'] = getRootDoc(el);
 		d['document'] = el.ownerDocument;
+		d['dropToInput'] = Services.prefs.getBoolPref('extensions.superdrag.behavior.drop.to.input');
 
 		return d;
 	}
@@ -478,6 +491,15 @@ var SuperDrag = new function() {
 		let s = doc.createProcessingInstruction("xml-stylesheet", 'href="' + href + '"');
 		doc.insertBefore(s, doc.documentElement);
 		return s;
+	}
+
+	function isInputElement(el) {
+		if (el && 
+		   ((el.tagName && (el.tagName == 'INPUT' || el.tagName == 'TEXTAREA'))
+		    || (el.getAttribute('contenteditable') == 'true'))) {
+			return true;
+		}
+		return false;
 	}
 
 	function openLink(url, how, noref) {

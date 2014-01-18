@@ -498,8 +498,12 @@ var SuperDrag = new function() {
 		return false;
 	}
 
-	function openLink(url, how, noref) {
+	function openLink(url, how, noref, postData) {
 		NS_ASSERT(gDataset != null, 'gDataset != null');
+		if (postData === undefined) {
+			postData = null;
+		}
+
 		let mw = getMainWindow();
 		let tb = mw.getBrowser();
 		let ref = gDataset['document'].documentURIObject;
@@ -507,10 +511,10 @@ var SuperDrag = new function() {
 			let doc = gDataset['rootDoc'];
 			doc.defaultView.setTimeout(function() {
 				let b = tb.selectedTab.linkedBrowser;
-				noref ? b.loadURI(url) : b.loadURI(url, ref);
+				noref ? b.loadURI(url, null, postData) : b.loadURI(url, ref, postData);
 			}, 1); // '1' to make sure that 'dragend' has already been fired and processed.
 		} else {
-			let tab = noref ? tb.addTab(url) : tb.addTab(url, ref);
+			let tab = noref ? tb.addTab(url, null, null, postData) : tb.addTab(url, ref, null, postData);
 			let pos = Services.prefs.getCharPref('extensions.superdrag.newtab.pos');
 			let i = tb.tabContainer.getIndexOfItem(tb.selectedTab);
 			let moveTo = tb.tabs.length - 1;
@@ -548,7 +552,7 @@ var SuperDrag = new function() {
 		let engine = index == -1 ? gEngines.currentEngine : gEngines.getVisibleEngines()[index];
 		let submission = engine.getSubmission(text);
 		url = submission.uri.spec;
-		openLink(url, how, true);
+		openLink(url, how, true, submission.postData);
 	}
 
 	function saveImage(imgurl) {

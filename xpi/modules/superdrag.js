@@ -387,7 +387,10 @@ var SuperDrag = new function() {
 		}
 		if (sel != '') {
 			d['selection'] = sel;
-			d['primaryKey'] = 'selection';
+
+			if (el.nodeType == 3 && el.nodeName == '#text') { // if the user is dragging the selected text, it will be the primaryKey.
+				d['primaryKey'] = 'selection';
+			}
 
 		}
 

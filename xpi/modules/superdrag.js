@@ -398,7 +398,6 @@ var SuperDrag = new function() {
 		// we'll check whether the text itself is a link
 		let text = d['selection'] || (d['link'] ? null : d['text']);
 		if (text) {
-			// TODO: the pattern should work for xxx.com/.net/.info, etc.
 			if (isURL(text)) {
 				d['link'] = text;
 				d['primaryKey'] = 'link';

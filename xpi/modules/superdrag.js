@@ -13,7 +13,10 @@ Cu.import("resource://gre/modules/debug.js")
 var SuperDrag = new function() {
 	const PANELID = 'superdrag-panel';
 	// TODO: this pattern doesn't work for '123 www.abc.com'.
-	let gUrlPattern = /^https?:\/\/w{0,3}\w*?\.(\w*?\.)?\w{2,3}\S*|www\.(\w*?\.)?\w*?\.\w{2,3}\S*|(\w*?\.)?\w*?\.\w{2,3}[\/\?]\S*$/;
+	let gUrlPatterns = [
+// /^https?:\/\/w{0,3}\w*?\.(\w*?\.)?\w{2,3}\S*|www\.(\w*?\.)?\w*?\.\w{2,3}\S*|(\w*?\.)?\w*?\.\w{2,3}[\/\?]\S*$/,
+/^(https?:\/\/)?(\w*\.)?((\w|-)+)\.(com|net|org|gov|mil|biz|cc|info|fm|mobi|tv|ag|am|asia|at|au|be|br|bz|ca|cn|co|de|es|eu|fr|gs|in|it|jp|la|me|ms|mx|nl|pe|ph|ru|se|so|tk|tw|us|uk|ws|xxx)(\/(\w|&|-|_|\?|\.|=|\/|#|~|!|\+|,|\*|@)*)?$/i,
+	];
 	let gStr = Cc["@mozilla.org/intl/stringbundle;1"].getService(Ci.nsIStringBundleService).createBundle("chrome://superdrag/locale/strings.properties");
 	// gPref = Cc["@mozilla.org/preferences-service;1"].getService(Ci.nsIPrefBranch);
 	let gDis = 100;
@@ -379,6 +382,9 @@ var SuperDrag = new function() {
 		// selection(s)
 		let sel = evt.target.ownerDocument.defaultView.getSelection();
 		sel = sel.toString();
+		if (sel.trim) {
+			sel = sel.trim();
+		}
 		if (sel != '') {
 			d['selection'] = sel;
 			d['primaryKey'] = 'selection';
@@ -390,7 +396,7 @@ var SuperDrag = new function() {
 		let text = d['selection'] || (d['link'] ? null : d['text']);
 		if (text) {
 			// TODO: the pattern should work for xxx.com/.net/.info, etc.
-			if (gUrlPattern.test(text)) {
+			if (isURL(text)) {
 				d['link'] = text;
 				d['primaryKey'] = 'link';
 			}
@@ -868,6 +874,15 @@ var SuperDrag = new function() {
 				label.setAttribute('value', s);
 			}
 		}
+	}
+
+	function isURL(text) {
+		for (let i = 0; i < gUrlPatterns.length; ++ i) {
+			if (gUrlPatterns[i].test(text)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	function getString(k) {

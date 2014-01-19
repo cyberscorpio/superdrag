@@ -15,7 +15,7 @@
 			<vbox class="superdrag-category" id="superdrag-link">
 				<hbox>
 					<label value="&superdrag.link;:" />
-					<label id="superdrag-link-desc" class="superdrag-category-desc" width="0" crop="center" flex="1" />
+					<label id="superdrag-link-desc" class="superdrag-category-desc text-link" href="#" width="0" crop="center" flex="1" />
 				</hbox>
 				<hbox>
 					<vbox id="superdrag-link-tab-background" flex="1" pack="center" class="superdrag-target">

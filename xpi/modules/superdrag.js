@@ -515,7 +515,7 @@ var SuperDrag = new function() {
 		let mw = getMainWindow();
 		let tb = mw.getBrowser();
 		let ref = gDataset['document'].documentURIObject;
-		if (how == 'current') {
+		if (how === 'current') {
 			let doc = gDataset['rootDoc'];
 			doc.defaultView.setTimeout(function() {
 				let b = tb.selectedTab.linkedBrowser;
@@ -526,10 +526,10 @@ var SuperDrag = new function() {
 			let pos = Services.prefs.getCharPref('extensions.superdrag.newtab.pos');
 			let i = tb.tabContainer.getIndexOfItem(tb.selectedTab);
 			let moveTo = tb.tabs.length - 1;
-			if (pos == 'right') {
+			if (pos === 'right') {
 				moveTo = i + 1;
 			}
-			if (how == 'foreground') {
+			if (how === 'foreground') {
 				if (Services.prefs.getBoolPref('extensions.superdrag.newtab.onleft.for.foreground')) {
 					moveTo = i;
 				}
@@ -540,7 +540,7 @@ var SuperDrag = new function() {
 			}
 
 			tb.moveTabTo(tab, moveTo);
-			if (!noref) {
+			if (!noref && how === 'background') {
 				tab.owner = null;
 			}
 		}

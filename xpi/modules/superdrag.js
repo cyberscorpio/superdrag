@@ -514,11 +514,12 @@ var SuperDrag = new function() {
 
 		let mw = getMainWindow();
 		let tb = mw.getBrowser();
+		let ct = tb.selectedTab;
 		let ref = gDataset['document'].documentURIObject;
 		if (how === 'current') {
 			let doc = gDataset['rootDoc'];
 			doc.defaultView.setTimeout(function() {
-				let b = tb.selectedTab.linkedBrowser;
+				let b = ct.linkedBrowser;
 				noref ? b.loadURI(url, null, postData) : b.loadURI(url, ref, postData);
 			}, 1); // '1' to make sure that 'dragend' has already been fired and processed.
 		} else {
@@ -540,9 +541,7 @@ var SuperDrag = new function() {
 			}
 
 			tb.moveTabTo(tab, moveTo);
-			if (!noref && how === 'background') {
-				tab.owner = null;
-			}
+			tab.owner = (how === 'background') ? null : ct;
 		}
 	}
 
@@ -613,10 +612,10 @@ var SuperDrag = new function() {
 				let desc = doc.getElementById('superdrag-' + cat + '-desc');
 				let data = (cat == 'text' ? (gDataset['selection'] || gDataset['text']) : gDataset[cat]);
 				if (data === undefined) {
-					section.classList.add('hide');
+					section.classList.add('superdrag-hide');
 					desc.setAttribute('value', null);
 				} else {
-					section.classList.remove('hide');
+					section.classList.remove('superdrag-hide');
 					desc.setAttribute('value', data);
 				}
 			});
@@ -625,7 +624,7 @@ var SuperDrag = new function() {
 			let opt = doc.getElementById('superdrag-options');
 			if (opt) {
 				let cls = opt.classList;
-				Services.prefs.getBoolPref('extensions.superdrag.panel.show.options') ? cls.remove('hide') : cls.add('hide');
+				Services.prefs.getBoolPref('extensions.superdrag.panel.show.options') ? cls.remove('superdrag-hide') : cls.add('superdrag-hide');
 			}
 
 			// 2. show the panel

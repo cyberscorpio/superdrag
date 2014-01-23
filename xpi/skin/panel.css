@@ -1,9 +1,9 @@
 @font-face {
 	font-family: 'iconfont-1';
-	src: url('iconfont.ttf') format('truetype'); /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+	src: url('iconfont.ttf') format('truetype');
 }
 
-.hide {
+.superdrag-hide {
 	display: none !important;
 }
 

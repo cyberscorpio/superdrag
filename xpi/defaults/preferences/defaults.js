@@ -16,7 +16,7 @@ pref('extensions.superdrag.default.action.image', 'background'); // 'background'
 
 // new tab
 pref('extensions.superdrag.newtab.pos', 'default'); // 'default', 'right'
-pref('extensions.superdrag.newtab.onleft.for.foreground', true);
+pref('extensions.superdrag.newtab.onleft.for.foreground', false);
 
 // popup delay
 pref('extensions.superdrag.popup.show.delay', 500); // show the menu after hover such a time interval (in ms)

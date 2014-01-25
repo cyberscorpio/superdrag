@@ -386,7 +386,6 @@ var SuperDrag = new function() {
 		if (sel.trim) {
 			sel = sel.trim();
 		}
-		dump(el);
 		if (sel != '') {
 			d['selection'] = sel;
 

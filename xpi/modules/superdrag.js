@@ -12,13 +12,11 @@ Cu.import("resource://gre/modules/debug.js")
 
 var SuperDrag = new function() {
 	const PANELID = 'superdrag-panel';
-	// TODO: this pattern doesn't work for '123 www.abc.com'.
 	let gUrlPatterns = [
 // /^https?:\/\/w{0,3}\w*?\.(\w*?\.)?\w{2,3}\S*|www\.(\w*?\.)?\w*?\.\w{2,3}\S*|(\w*?\.)?\w*?\.\w{2,3}[\/\?]\S*$/,
-/^(https?:\/\/)?(\w*\.)?((\w|-)+)\.(com|net|org|gov|mil|biz|cc|info|fm|mobi|tv|ag|am|asia|at|au|be|br|bz|ca|cn|co|de|es|eu|fr|gs|in|it|jp|la|me|ms|mx|nl|pe|ph|ru|se|so|tk|tw|us|uk|ws|xxx)(\/(\w|&|-|_|\?|\.|=|\/|#|~|!|\+|,|\*|@)*)?$/i,
+/^(https?:\/\/)?(\w*\.){0,2}((\w|-)+)\.(com|net|org|gov|mil|biz|cc|info|fm|mobi|tv|ag|am|asia|at|au|be|br|bz|ca|cn|co|de|es|eu|fr|gs|in|it|jp|la|me|ms|mx|nl|pe|ph|ru|se|so|tk|tw|us|uk|ws|xxx)(\/(\w|&|-|_|\?|\.|=|\/|#|~|!|\+|,|\*|@)*)?$/i,
 	];
 	let gStr = Cc["@mozilla.org/intl/stringbundle;1"].getService(Ci.nsIStringBundleService).createBundle("chrome://superdrag/locale/strings.properties");
-	// gPref = Cc["@mozilla.org/preferences-service;1"].getService(Ci.nsIPrefBranch);
 	let gDis = 100;
 	let gDefHandlers = {
 		'dragstart': function(evt) {
@@ -353,7 +351,18 @@ var SuperDrag = new function() {
 		}
 
 		data = dt.getData('text/uri-list');
-		if (data != '') {
+		if (data === '') {
+			// still try to get a link
+			let a = el;
+			while (a) {
+				if (a.tagName == 'A') {
+					data = a.href;
+					break;
+				}
+				a = a.parentNode;
+			}
+		}
+		if (data !== '' && isLinkSupported(data)) {
 			d['link'] = data;
 			if (el.nodeType == 1 && el.tagName == 'A') {
 				d['primaryKey'] = 'link';
@@ -369,14 +378,6 @@ var SuperDrag = new function() {
 					d['text'] = text;
 				}
 			}
-
-			// doesn't support such links
-			if (data.indexOf('javascript:') == 0) {
-				delete d['link'];
-				if (d['primaryKey'] == 'link') {
-					d['primaryKey'] = 'text';
-				}
-			}
 		}
 
 		// selection(s)
@@ -385,6 +386,7 @@ var SuperDrag = new function() {
 		if (sel.trim) {
 			sel = sel.trim();
 		}
+		dump(el);
 		if (sel != '') {
 			d['selection'] = sel;
 
@@ -882,6 +884,13 @@ var SuperDrag = new function() {
 			if (gUrlPatterns[i].test(text)) {
 				return true;
 			}
+		}
+		return false;
+	}
+
+	function isLinkSupported(link) {
+		if (link && link.indexOf('http') === 0) {
+			return true;
 		}
 		return false;
 	}

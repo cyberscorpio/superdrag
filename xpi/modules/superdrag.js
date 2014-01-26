@@ -14,7 +14,7 @@ var SuperDrag = new function() {
 	const PANELID = 'superdrag-panel';
 	let gUrlPatterns = [
 // /^https?:\/\/w{0,3}\w*?\.(\w*?\.)?\w{2,3}\S*|www\.(\w*?\.)?\w*?\.\w{2,3}\S*|(\w*?\.)?\w*?\.\w{2,3}[\/\?]\S*$/,
-/^(https?:\/\/)?(\w*\.){0,2}((\w|-)+)\.(com|net|org|gov|mil|biz|cc|info|fm|mobi|tv|ag|am|asia|at|au|be|br|bz|ca|cn|co|de|es|eu|fr|gs|in|it|jp|la|me|ms|mx|nl|pe|ph|ru|se|so|tk|tw|us|uk|ws|xxx)(\/(\w|&|-|_|\?|\.|=|\/|#|~|!|\+|,|\*|@)*)?$/i,
+/^(https?:\/\/)?(\w*\.){0,2}((\w|-)+)\.(com|net|org|gov|mil|biz|cc|info|fm|mobi|tv|ag|am|asia|at|au|be|br|bz|ca|cn|co|de|es|eu|fr|gs|in|it|jp|la|me|ms|mx|nl|pe|ph|ru|se|so|tk|tw|us|uk|ws|xxx)(\/(\w|%|&|-|_|\?|\.|=|\/|#|~|!|\+|,|\*|@)*)?$/i,
 	];
 	let gStr = Cc["@mozilla.org/intl/stringbundle;1"].getService(Ci.nsIStringBundleService).createBundle("chrome://superdrag/locale/strings.properties");
 	let gDis = 100;
@@ -879,6 +879,11 @@ var SuperDrag = new function() {
 	}
 
 	function isURL(text) {
+		if (text.length && text.length > 2083) { // see http://stackoverflow.com/questions/417142/what-is-the-maximum-length-of-a-url-in-different-browsers
+			return false;
+		}
+
+		let text = text.replace('\r', '').replace('\n', '');
 		for (let i = 0; i < gUrlPatterns.length; ++ i) {
 			if (gUrlPatterns[i].test(text)) {
 				return true;

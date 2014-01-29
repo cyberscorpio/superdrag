@@ -524,10 +524,15 @@ var SuperDrag = new function() {
 				noref ? b.loadURI(url, null, postData) : b.loadURI(url, ref, postData);
 			}, 1); // '1' to make sure that 'dragend' has already been fired and processed.
 		} else {
-			let tab = noref ? tb.addTab(url, null, null, postData) : tb.addTab(url, ref, null, postData);
-			let pos = Services.prefs.getCharPref('extensions.superdrag.newtab.pos');
 			let i = tb.tabContainer.getIndexOfItem(tb.selectedTab);
+			let param = {
+				referrerURI: noref ? null : ref,
+				postData: postData,
+				inBackground: true
+			};
+			let tab = tb.loadOneTab(url, param);
 			let moveTo = tb.tabs.length - 1;
+			let pos = Services.prefs.getCharPref('extensions.superdrag.newtab.pos');
 			if (pos === 'right') {
 				moveTo = i + 1;
 			}
@@ -542,7 +547,6 @@ var SuperDrag = new function() {
 			}
 
 			tb.moveTabTo(tab, moveTo);
-			tab.owner = (how === 'background') ? null : ct;
 		}
 	}
 

@@ -528,9 +528,11 @@ var SuperDrag = new function() {
 			let param = {
 				referrerURI: noref ? null : ref,
 				postData: postData,
-				inBackground: true
+				inBackground: true,
+				relatedToCurrent: true
 			};
 			let tab = tb.loadOneTab(url, param);
+			let needMove = false;
 			let moveTo = tb.tabs.length - 1;
 			let pos = Services.prefs.getCharPref('extensions.superdrag.newtab.pos');
 			if (pos === 'right') {
@@ -539,6 +541,7 @@ var SuperDrag = new function() {
 			if (how === 'foreground') {
 				if (Services.prefs.getBoolPref('extensions.superdrag.newtab.onleft.for.foreground')) {
 					moveTo = i;
+					needMove = true;
 				}
 
 				mw.setTimeout(function() {
@@ -546,7 +549,21 @@ var SuperDrag = new function() {
 				}, 0);
 			}
 
-			tb.moveTabTo(tab, moveTo);
+			if (!needMove) {
+				let irac = Services.prefs.getBoolPref("browser.tabs.insertRelatedAfterCurrent");
+				if ((pos === 'default' && irac) || (pos === 'right' && !irac)) {
+					needMove = true;
+				}
+			}
+			if (needMove) {
+				// Since tb.moveTabTo() will clear _lastRelatedTab,
+				// _lastRelatedTab is important for handling the owner,
+				// so we must save / restore it.
+				// The details are available on tabbrowser.xml (moveTabTo() and addTab())
+				let tmp = tb._lastRelatedTab;
+				tb.moveTabTo(tab, moveTo);
+				tb._lastRelatedTab = tmp;
+			}
 		}
 	}
 

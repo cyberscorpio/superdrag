@@ -551,7 +551,7 @@ var SuperDrag = new function() {
 
 			if (!needMove) {
 				let irac = Services.prefs.getBoolPref("browser.tabs.insertRelatedAfterCurrent");
-				if ((pos === 'default' && irac) || (pos === 'right' && !irac)) {
+				if ((pos === 'rightmost' && irac) || (pos === 'right' && !irac)) {
 					needMove = true;
 				}
 			}

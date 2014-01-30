@@ -120,8 +120,8 @@
 						</vbox>
 						<menulist preference="pref-newtab-pos">
 							<menupopup>
-								<menuitem value="default" label="&superdrag.newtab.pos.default;" />
 								<menuitem value="right" label="&superdrag.newtab.pos.right;" />
+								<menuitem value="rightmost" label="&superdrag.newtab.pos.rightmost;" />
 							</menupopup>
 						</menulist>
 					</row>

@@ -15,7 +15,7 @@ pref('extensions.superdrag.default.action.search', 'background'); // 'background
 pref('extensions.superdrag.default.action.image', 'background'); // 'background', 'current', 'save'
 
 // new tab
-pref('extensions.superdrag.newtab.pos', 'default'); // 'default', 'right'
+pref('extensions.superdrag.newtab.pos', 'right'); // 'right', 'rightmost'
 pref('extensions.superdrag.newtab.onleft.for.foreground', false);
 
 // popup delay

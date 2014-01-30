@@ -29,8 +29,8 @@
 <!ENTITY superdrag.panel.top.right "Top &amp; Right corner">
 <!ENTITY superdrag.newtab.behaviors "New Tab Behaviors">
 <!ENTITY superdrag.newtab.pos "Where to put the new tab">
-<!ENTITY superdrag.newtab.pos.default "Default (right most)">
 <!ENTITY superdrag.newtab.pos.right "Right to current">
+<!ENTITY superdrag.newtab.pos.rightmost "Right most">
 <!ENTITY superdrag.newtab.onleft.for.foreground "Where to put foreground tab">
 <!ENTITY superdrag.newtab.onleft.yes "Left to current tab">
 <!ENTITY superdrag.newtab.onleft.no "Same as above">

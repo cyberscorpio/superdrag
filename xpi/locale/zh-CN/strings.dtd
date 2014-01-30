@@ -29,8 +29,8 @@
 <!ENTITY superdrag.panel.top.right "在窗口右上角">
 <!ENTITY superdrag.newtab.behaviors "新标签页的属性">
 <!ENTITY superdrag.newtab.pos "新标签页的位置">
-<!ENTITY superdrag.newtab.pos.default "默认 (最右→_→)">
 <!ENTITY superdrag.newtab.pos.right "当前标签页的右侧">
+<!ENTITY superdrag.newtab.pos.rightmost "最右→_→">
 <!ENTITY superdrag.newtab.onleft.for.foreground "新前台标签的位置">
 <!ENTITY superdrag.newtab.onleft.yes "当前标签的左侧">
 <!ENTITY superdrag.newtab.onleft.no "使用上面的设置">

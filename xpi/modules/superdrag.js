@@ -9,11 +9,12 @@ Cu.import("resource://gre/modules/Services.jsm");
 Cu.import("resource://gre/modules/FileUtils.jsm");
 Cu.import("resource://gre/modules/Downloads.jsm");
 Cu.import("resource://gre/modules/debug.js")
+Cu.import('resource://gre/modules/devtools/Console.jsm');
 
 var SuperDrag = new function() {
 	const PANELID = 'superdrag-panel';
 	let gUrlPatterns = [
-/^(https?:\/\/)?(\w*\.){0,2}((\w|-)+)\.(com|net|org|gov|mil|biz|cc|info|fm|mobi|tv|ag|am|asia|at|au|be|br|bz|ca|cn|co|de|es|eu|fr|gs|in|it|jp|la|me|ms|mx|nl|pe|ph|ru|se|so|tk|tw|us|uk|ws|xxx)(\/(\w|%|&|-|_|\||\?|\.|=|\/|#|~|!|\+|,|\*|@)*)?$/i,
+/^(https?:\/\/)?(\w*\.){0,3}((\w|-)+)\.(com|net|org|gov|mil|biz|cc|info|fm|mobi|tv|ag|am|asia|at|au|be|br|bz|ca|cn|co|de|es|eu|fr|gs|in|it|jp|la|me|ms|mx|nl|pe|ph|ru|se|so|tk|tw|us|uk|ws|xxx)(\/(\w|%|&|-|_|\||\?|\.|=|\/|#|~|!|\+|,|\*|@)*)?$/i,
 	];
 	let gStr = Cc["@mozilla.org/intl/stringbundle;1"].getService(Ci.nsIStringBundleService).createBundle("chrome://superdrag/locale/strings.properties");
 	let gDis = 100;
@@ -26,7 +27,7 @@ var SuperDrag = new function() {
 			let doc = browser.contentDocument;
 			try {
 				let uri = doc.location.href;
-				if (uri.indexOf('about:') == 0 || uri.indexOf('chrome://') == 0) {
+				if (uri.startsWith('about:') || uri.startsWith('chrome://')) {
 					return;
 				}
 
@@ -89,7 +90,7 @@ var SuperDrag = new function() {
 		'dragend': function(evt) {
 			if (gDataset) {
 				afterDrag();
-				// log('----> drag end @' + (new Date()).toString());
+				// console.log('----> drag end @' + (new Date()).toString());
 			}
 		},
 	};
@@ -281,7 +282,7 @@ var SuperDrag = new function() {
 			'superdrag-image-tab-background': 'background',
 			'superdrag-image-tab-foreground': 'foreground'
 		};
-		if (id.indexOf('superdrag-link') == 0) {
+		if (id.startsWith('superdrag-link')) {
 			let url = gDataset['link'];
 			if (url) {
 				if (map[id]) {
@@ -289,10 +290,10 @@ var SuperDrag = new function() {
 				}
 				return true;
 			}
-		} else if (id.indexOf('superdrag-text') == 0) {
+		} else if (id.startsWith('superdrag-text')) {
 			// TODO: it should be an unreachable path, and I need to remove this branch later.
 			return search(-1);
-		} else if (id.indexOf('superdrag-image') == 0) {
+		} else if (id.startsWith('superdrag-image')) {
 			let imgurl = gDataset['image'];
 			if (imgurl) {
 				if (id == 'superdrag-image-save') {
@@ -330,13 +331,11 @@ var SuperDrag = new function() {
 			// looks like:
 			//  1. the el.textContent is the content of the element being dragged, not the selection.
 			//  2. it only happens when you drag the selection
-			// log(el.textContent);
+			// console.log(el.textContent);
 		}
 
 		let data = dt.getData('text/plain');
-		if (data.trim) {
-			data = data.trim();
-		}
+		data = trim(data);
 		if (data != '') {
 			d['text'] = data;
 			d['primaryKey'] = 'text';
@@ -368,9 +367,7 @@ var SuperDrag = new function() {
 
 				// TODO: shoud we do this?
 				let text = el.textContent;
-				if (text.trim) {
-					text = text.trim();
-				}
+				text = trim(text);
 				if (text == '') {
 					delete d['text'];
 				} else {
@@ -382,9 +379,7 @@ var SuperDrag = new function() {
 		// selection(s)
 		let sel = evt.target.ownerDocument.defaultView.getSelection();
 		sel = sel.toString();
-		if (sel.trim) {
-			sel = sel.trim();
-		}
+		sel = trim(sel);
 		if (sel != '') {
 			d['selection'] = sel;
 
@@ -398,7 +393,8 @@ var SuperDrag = new function() {
 		// we'll check whether the text itself is a link
 		let text = d['selection'] || (d['link'] ? null : d['text']);
 		if (text) {
-			if (isURL(text)) {
+			text = trim(text);
+			if (text && isURL(text)) {
 				d['link'] = text;
 				d['primaryKey'] = 'link';
 			}
@@ -464,18 +460,11 @@ var SuperDrag = new function() {
 
 	// -------------------------------------------------------------------------------- 
 	// utils
-	let logger = Cc['@mozilla.org/consoleservice;1'].getService(Ci.nsIConsoleService);
-	function log() {
-		let s = '';
-		for (let i = 0; i < arguments.length; ++ i) {
-			if (s !== '') {
-				s += ', ';
-			}
-			s += arguments[i];
-		}
-		if (s !== '') {
-			logger.logStringMessage(s);
-		}
+	function trim(s) {
+		// The code is from here:
+		// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/Trim#Compatibility
+		// And I add \u200e for Google's search results.
+		return s.replace(/^(\s|\u200e)+|(\s|\u200e)+$/gm, '');
 	}
 
 	function getRootDoc(el) {
@@ -665,7 +654,7 @@ var SuperDrag = new function() {
 			//  below code is used to report the width of the panel,
 			//  which is useful for the CSS file.
 			// rc = gPanel.getBoundingClientRect();
-			// log('width: ' + (rc.right - rc.left));
+			// console.log('width: ' + (rc.right - rc.left));
 
 			// 3. set the action name
 			updateActionString(getActionString(null));
@@ -913,7 +902,7 @@ var SuperDrag = new function() {
 	}
 
 	function isLinkSupported(link) {
-		if (link && link.indexOf('http') === 0) {
+		if (link && link.startsWith('http')) {
 			return true;
 		}
 		return false;
@@ -1012,39 +1001,8 @@ var SuperDrag = new function() {
 	}
 
 	function dump(o, arg) {
-		if (o) {
-			for (let k in o) {
-				try {
-					let prefix = '    ';
-					if (arg == 'f') {
-						if (typeof o[k] == 'function') {
-							prefix = '    (f)';
-							log(prefix + k + ':\t\t' + o[k]);
-						}
-					} else if (arg == 'number') {
-						if (typeof o[k] == 'function' || o[k] == null || o[k].toString().indexOf('[object ') == 0) {
-							continue;
-						}
-						log(prefix + k + ':\t\t' + o[k]);
-					} else {
-						if (typeof o[k] == 'function') {
-							continue;
-						}
-						log(prefix + k + ':\t\t' + o[k]);
-					}
-				} catch (e) {
-					Cu.reportError(e);
-					log('key = ' + k);
-					continue;
-				}
-			}
-			log(o + (o && o.tagName === undefined ? '' : ' (' + o.tagName + ')'));
-		} else {
-			log(o);
-		}
+		console.dir(o);
 	}
-
-	// dump(OS.Constants.Path);
 
 	return this;
 };

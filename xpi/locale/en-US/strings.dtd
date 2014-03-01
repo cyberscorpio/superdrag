@@ -13,14 +13,18 @@
 <!ENTITY superdrag.action.open.link.in.background.tab "Open link in background tab">
 <!ENTITY superdrag.action.open.link.in.foreground.tab "Open link in foreground tab">
 <!ENTITY superdrag.action.open.link.in.current.tab "Open link in current tab">
+<!ENTITY superdrag.action.ignore.link "Nothing">
 
 <!ENTITY superdrag.action.open.search.in.background.tab "Search in background tab">
 <!ENTITY superdrag.action.open.search.in.foreground.tab "Search in foreground tab">
 <!ENTITY superdrag.action.open.search.in.current.tab "Search in current tab">
+<!ENTITY superdrag.action.ignore.search "Nothing">
 
 <!ENTITY superdrag.action.open.image.in.background.tab "Open image in background tab">
 <!ENTITY superdrag.action.open.image.in.foreground.tab "Open image in foreground tab">
 <!ENTITY superdrag.action.save.image "Save the image">
+<!ENTITY superdrag.action.ignore.image "Nothing">
+
 <!ENTITY superdrag.panel "Command Panel">
 <!ENTITY superdrag.panel.show.distance "Move distance to show the panel">
 <!ENTITY superdrag.panel.show.distance.hint "In Pixel">

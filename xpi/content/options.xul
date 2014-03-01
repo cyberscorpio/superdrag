@@ -46,6 +46,7 @@
 								<menuitem label="&superdrag.action.open.link.in.background.tab;" value="background" />
 								<menuitem label="&superdrag.action.open.link.in.foreground.tab;" value="foreground" />
 								<menuitem label="&superdrag.action.open.link.in.current.tab;" value="current" />
+								<menuitem label="&superdrag.action.ignore.link;" value="ignore" />
 							</menupopup>
 						</menulist>
 					</row>
@@ -58,6 +59,7 @@
 								<menuitem label="&superdrag.action.open.search.in.background.tab;" value="background" />
 								<menuitem label="&superdrag.action.open.search.in.foreground.tab;" value="foreground" />
 								<menuitem label="&superdrag.action.open.search.in.current.tab;" value="current" />
+								<menuitem label="&superdrag.action.ignore.search;" value="ignore" />
 							</menupopup>
 						</menulist>
 					</row>
@@ -70,6 +72,7 @@
 								<menuitem label="&superdrag.action.open.image.in.background.tab;" value="background" />
 								<menuitem label="&superdrag.action.open.image.in.foreground.tab;" value="foreground" />
 								<menuitem label="&superdrag.action.save.image;" value="save" />
+								<menuitem label="&superdrag.action.ignore.image;" value="ignore" />
 							</menupopup>
 						</menulist>
 					</row>

@@ -501,6 +501,10 @@ var SuperDrag = new function() {
 			postData = null;
 		}
 
+		if (how === 'ignore') {
+			return;
+		}
+
 		let mw = getMainWindow();
 		let tb = mw.getBrowser();
 		let ct = tb.selectedTab;
@@ -821,17 +825,20 @@ var SuperDrag = new function() {
 		'link': {
 			'background': 'superdrag-link-tab-background',
 			'foreground': 'superdrag-link-tab-foreground',
-			'current': 'superdrag-link-tab-current'
+			'current': 'superdrag-link-tab-current',
+			'ignore': 'superdrag-link-ignore'
 		},
 		'text': {
 			'background': 'superdrag-text-search-background',
 			'foreground': 'superdrag-text-search-foreground',
-			'current': 'superdrag-text-search-current'
+			'current': 'superdrag-text-search-current',
+			'ignore': 'superdrag-text-search-ignore'
 		},
 		'image': {
 			'background': 'superdrag-image-tab-background',
 			'foreground': 'superdrag-image-tab-foreground',
-			'save': 'superdrag-image-save'
+			'save': 'superdrag-image-save',
+			'ignore': 'superdrag-image-ignore'
 		}
 	};
 	function getActionString(id) {
@@ -858,18 +865,24 @@ var SuperDrag = new function() {
 			return getString('sdOpenLinkInForegroundTab');
 		case 'superdrag-link-tab-current':
 			return getString('sdOpenLinkInCurrentTab');
+		case 'superdrag-link-ignore':
+			return getString('sdNothing');
 		case 'superdrag-text-search-background':
 			return getString('sdSearchInBackgroundTabWith').replace('%engine%', gEngines.currentEngine.name);
 		case 'superdrag-text-search-foreground':
 			return getString('sdSearchInForegroundTabWith').replace('%engine%', gEngines.currentEngine.name);
 		case 'superdrag-text-search-current':
 			return getString('sdSearchInCurrentTabWith').replace('%engine%', gEngines.currentEngine.name);
+		case 'superdrag-text-search-ignore':
+			return getString('sdNothing');
 		case 'superdrag-image-tab-background':
 			return getString('sdOpenImageInBackgroundTab');
 		case 'superdrag-image-tab-foreground':
 			return getString('sdOpenImageInForegroundTab');
 		case 'superdrag-image-save':
 			return getString('sdSaveImage');
+		case 'superdrag-image-ignore':
+			return getString('sdNothing');
 		case 'superdrag-cancel':
 			return getString('sdCancel');
 		case 'superdrag-options':

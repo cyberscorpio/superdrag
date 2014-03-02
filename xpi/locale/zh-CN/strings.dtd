@@ -13,14 +13,18 @@
 <!ENTITY superdrag.action.open.link.in.background.tab "后台打开链接">
 <!ENTITY superdrag.action.open.link.in.foreground.tab "前台打开链接">
 <!ENTITY superdrag.action.open.link.in.current.tab "当前标签页打开链接">
+<!ENTITY superdrag.action.ignore.link "无">
 
 <!ENTITY superdrag.action.open.search.in.background.tab "后台打开搜索">
 <!ENTITY superdrag.action.open.search.in.foreground.tab "前台打开搜索">
 <!ENTITY superdrag.action.open.search.in.current.tab "当前标签页中搜索">
+<!ENTITY superdrag.action.ignore.search "无">
 
 <!ENTITY superdrag.action.open.image.in.background.tab "后台打开图片">
 <!ENTITY superdrag.action.open.image.in.foreground.tab "前台打开图片">
 <!ENTITY superdrag.action.save.image "保存图片">
+<!ENTITY superdrag.action.ignore.image "无">
+
 <!ENTITY superdrag.panel "命令面板">
 <!ENTITY superdrag.panel.show.distance "移动多少距离显示面板">
 <!ENTITY superdrag.panel.show.distance.hint "单位是像素">

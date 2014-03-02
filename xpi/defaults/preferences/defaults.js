@@ -9,10 +9,10 @@ pref('extensions.superdrag.panel.follow.offset', 5);
 pref('extensions.superdrag.panel.show.options', true);
 
 // default action
-pref('extensions.superdrag.default.action.link', 'background'); // 'background', 'foreground', 'current'
+pref('extensions.superdrag.default.action.link', 'background'); // 'background', 'foreground', 'current', 'ignore'
 pref('extensions.superdrag.default.action.text', 'search'); // 'search' only, currently
-pref('extensions.superdrag.default.action.search', 'background'); // 'background', 'foreground', 'current'
-pref('extensions.superdrag.default.action.image', 'background'); // 'background', 'current', 'save'
+pref('extensions.superdrag.default.action.search', 'background'); // 'background', 'foreground', 'current', 'ignore'
+pref('extensions.superdrag.default.action.image', 'background'); // 'background', 'current', 'save', 'ignore'
 
 // new tab
 pref('extensions.superdrag.newtab.pos', 'right'); // 'right', 'rightmost'

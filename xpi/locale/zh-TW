@@ -33,11 +33,11 @@
 
 <!ENTITY superdrag.panel "指令面板">
 <!ENTITY superdrag.panel.show.distance "移動多少距離顯示面板">
-<!ENTITY superdrag.panel.show.distance.hint "单位是圖元">
+<!ENTITY superdrag.panel.show.distance.hint "單位是圖元">
 <!ENTITY superdrag.panel.position "面板的位置">
 <!ENTITY superdrag.panel.follow.cursor "在游標附近">
 <!ENTITY superdrag.panel.top.right "在視窗右上角">
-<!ENTITY superdrag.newtab.behaviors "新標籤頁的属性">
+<!ENTITY superdrag.newtab.behaviors "新標籤頁的屬性">
 <!ENTITY superdrag.newtab.pos "新標籤頁的位置">
 <!ENTITY superdrag.newtab.pos.right "目前標籤頁的右側">
 <!ENTITY superdrag.newtab.pos.rightmost "最右→_→">

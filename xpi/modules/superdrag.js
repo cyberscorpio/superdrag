@@ -523,15 +523,21 @@ var SuperDrag = new function() {
 				inBackground: true,
 				relatedToCurrent: true
 			};
+			let pos = Services.prefs.getCharPref('extensions.superdrag.newtab.pos');
+			let left = Services.prefs.getBoolPref('extensions.superdrag.newtab.onleft.for.foreground');
+			// support for "Tree Style Tab"
+			if ('TreeStyleTabService' in mw && pos === 'right' &&
+			   (how !== 'foreground' || !left)) {
+				mw.TreeStyleTabService.readyToOpenChildTab(tb.selectedTab);
+			}
 			let tab = tb.loadOneTab(url, param);
 			let needMove = false;
 			let moveTo = tb.tabs.length - 1;
-			let pos = Services.prefs.getCharPref('extensions.superdrag.newtab.pos');
 			if (pos === 'right') {
 				moveTo = i + 1;
 			}
 			if (how === 'foreground') {
-				if (Services.prefs.getBoolPref('extensions.superdrag.newtab.onleft.for.foreground')) {
+				if (left) {
 					moveTo = i;
 					needMove = true;
 				}

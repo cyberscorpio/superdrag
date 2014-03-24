@@ -526,8 +526,7 @@ var SuperDrag = new function() {
 			let pos = Services.prefs.getCharPref('extensions.superdrag.newtab.pos');
 			let left = Services.prefs.getBoolPref('extensions.superdrag.newtab.onleft.for.foreground');
 			// support for "Tree Style Tab"
-			if ('TreeStyleTabService' in mw && pos === 'right' &&
-			   (how !== 'foreground' || !left)) {
+			if ('TreeStyleTabService' in mw && pos === 'child') {
 				mw.TreeStyleTabService.readyToOpenChildTab(tb.selectedTab);
 			}
 			let tab = tb.loadOneTab(url, param);
@@ -537,7 +536,7 @@ var SuperDrag = new function() {
 				moveTo = i + 1;
 			}
 			if (how === 'foreground') {
-				if (left) {
+				if (left && pos !== 'child') {
 					moveTo = i;
 					needMove = true;
 				}

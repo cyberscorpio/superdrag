@@ -125,6 +125,7 @@
 							<menupopup>
 								<menuitem value="right" label="&superdrag.newtab.pos.right;" />
 								<menuitem value="rightmost" label="&superdrag.newtab.pos.rightmost;" />
+								<menuitem value="child" label="&superdrag.newtab.pos.child;" />
 							</menupopup>
 						</menulist>
 					</row>
@@ -132,7 +133,7 @@
 						<vbox pack="center">
 							<label value="&superdrag.newtab.onleft.for.foreground;" />
 						</vbox>
-						<menulist preference="pref-newtab-onleft-for-foreground">
+						<menulist id="menu-newtab-onleft-for-foreground" preference="pref-newtab-onleft-for-foreground">
 							<menupopup>
 								<menuitem value="true" label="&superdrag.newtab.onleft.yes;" />
 								<menuitem value="false" label="&superdrag.newtab.onleft.no;" />
@@ -172,6 +173,18 @@
 					}
 				}
 			}
+
+			var prefPos = document.getElementById('pref-newtab-pos');
+			var menuLeft = document.getElementById('menu-newtab-onleft-for-foreground');
+			var onMenuLeftChange = function() {
+				if(prefPos.value === 'child') {
+					menuLeft.disabled = true;
+				} else {
+					menuLeft.disabled = false;
+				}
+			};
+			prefPos.addEventListener('change', onMenuLeftChange, false);
+			onMenuLeftChange();
 		}, false);
 
 		window.addEventListener('unload', function() {

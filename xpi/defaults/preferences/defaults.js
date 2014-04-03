@@ -3,7 +3,7 @@ pref('extensions.superdrag.version', '0.0.0');
 // panel position
 pref('extensions.superdrag.panel.show.distance', 120); // the panel will popup after moves such a distance.
 pref('extensions.superdrag.panel.pos', 0); // 0: follow the cursor, 1: right top corner.
-pref('extensions.superdrag.panel.follow.offset', 5);
+pref('extensions.superdrag.panel.follow.offset', 10);
 
 // panel settings
 pref('extensions.superdrag.panel.show.options', true);

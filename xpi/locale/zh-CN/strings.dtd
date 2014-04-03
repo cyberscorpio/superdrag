@@ -35,6 +35,7 @@
 <!ENTITY superdrag.newtab.pos "新标签页的位置">
 <!ENTITY superdrag.newtab.pos.right "当前标签页的右侧">
 <!ENTITY superdrag.newtab.pos.rightmost "最右→_→">
+<!ENTITY superdrag.newtab.pos.child "As child (Tree Style Tab)">
 <!ENTITY superdrag.newtab.onleft.for.foreground "新前台标签的位置">
 <!ENTITY superdrag.newtab.onleft.yes "当前标签的左侧">
 <!ENTITY superdrag.newtab.onleft.no "使用上面的设置">

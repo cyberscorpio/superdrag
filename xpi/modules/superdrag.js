@@ -920,7 +920,7 @@ this.SuperDrag = new function() {
 	}
 
 	function isLinkSupported(link) {
-		if (link && link.startsWith('http')) {
+		if (link && (link.startsWith('http') || link.startsWith('file:'))) {
 			return true;
 		}
 		return false;

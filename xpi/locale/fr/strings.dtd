@@ -1,0 +1,42 @@
+<!ENTITY superdrag.title "Super Drag">
+
+<!ENTITY superdrag.link "Lien">
+<!ENTITY superdrag.text "Texte">
+<!ENTITY superdrag.search "Recherche">
+<!ENTITY superdrag.image "Image">
+<!ENTITY superdrag.cancel "Annuler">
+
+<!ENTITY superdrag.options.title "Options de Super Drag">
+<!ENTITY superdrag.default.actions.title "Actions par défaut">
+<!ENTITY superdrag.default.actions.desc "C'est ce qui arrivera lors du relâchement du bouton de la souris.">
+
+<!ENTITY superdrag.action.open.link.in.background.tab "Ouvrir le lien en arrière-plan">
+<!ENTITY superdrag.action.open.link.in.foreground.tab "Ouvrir le lien en avant-plan">
+<!ENTITY superdrag.action.open.link.in.current.tab "Ouvrir le lien dans l'onglet actuel">
+<!ENTITY superdrag.action.ignore.link "Rien">
+
+<!ENTITY superdrag.action.open.search.in.background.tab "Recherche en arrière-plan">
+<!ENTITY superdrag.action.open.search.in.foreground.tab "recherche en avant-plan">
+<!ENTITY superdrag.action.open.search.in.current.tab "Recherche dans l'onglet actuel">
+<!ENTITY superdrag.action.ignore.search "Rien">
+
+<!ENTITY superdrag.action.open.image.in.background.tab "Ouvrir l'image en arrière-plan">
+<!ENTITY superdrag.action.open.image.in.foreground.tab "Ouvrir l'image en avant-plan">
+<!ENTITY superdrag.action.save.image "Enregistrer l'image">
+<!ENTITY superdrag.action.ignore.image "Rien">
+
+<!ENTITY superdrag.panel "panneau de contrôle">
+<!ENTITY superdrag.panel.show.distance "Distance pour montrer le panneau">
+<!ENTITY superdrag.panel.show.distance.hint "En Pixels">
+<!ENTITY superdrag.panel.position "Position du panneau">
+<!ENTITY superdrag.panel.follow.cursor "Suivre le curseur">
+<!ENTITY superdrag.panel.top.right "Coin haut &amp; droit">
+<!ENTITY superdrag.newtab.behaviors "Comportement du nouvel onglet">
+<!ENTITY superdrag.newtab.pos "Où positionner le nouvel onglet">
+<!ENTITY superdrag.newtab.pos.right "À droite de l'actuel">
+<!ENTITY superdrag.newtab.pos.rightmost "Complètement à droite">
+<!ENTITY superdrag.newtab.pos.child "Comme enfant (comme un arbre)">
+<!ENTITY superdrag.newtab.onleft.for.foreground "Où positionner l'onglet en avant-plan">
+<!ENTITY superdrag.newtab.onleft.yes "À gauche de l'onglet actuel">
+<!ENTITY superdrag.newtab.onleft.no "Comme au dessus">
+<!ENTITY superdrag.reset.all "Tout réinitialiser">

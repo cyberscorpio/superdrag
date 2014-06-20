@@ -7,8 +7,9 @@ skin          superdrag  classic/1.0  skin/
 # Locale support
 
 # default locale
-# locale	superdrag	en-US   locale/zh-TW/
+# locale	superdrag	en-US   locale/fr/
 locale	superdrag	en-US   locale/en-US/
 
 locale	superdrag	zh-CN   locale/zh-CN/
 locale	superdrag	zh-TW   locale/zh-TW/
+locale	superdrag	fr      locale/fr/

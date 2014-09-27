@@ -1,0 +1,42 @@
+<!ENTITY superdrag.title "Super Drag">
+
+<!ENTITY superdrag.link "Link">
+<!ENTITY superdrag.text "Text">
+<!ENTITY superdrag.search "Suche">
+<!ENTITY superdrag.image "Bild">
+<!ENTITY superdrag.cancel "Abbrechen">
+
+<!ENTITY superdrag.options.title "Super Drag Optionen">
+<!ENTITY superdrag.default.actions.title "Standardaktionen">
+<!ENTITY superdrag.default.actions.desc "Das wird passieren, wenn die Maustaste losgelassen wird.">
+
+<!ENTITY superdrag.action.open.link.in.background.tab "Öffne Link in einem Tab im Hintergrund">
+<!ENTITY superdrag.action.open.link.in.foreground.tab "Öffne Link in einem Tab im Vordergund">
+<!ENTITY superdrag.action.open.link.in.current.tab "Öffne Link im aktuellen Tab">
+<!ENTITY superdrag.action.ignore.link "Nichts">
+
+<!ENTITY superdrag.action.open.search.in.background.tab "Suche in einem Tab im Hintergrund">
+<!ENTITY superdrag.action.open.search.in.foreground.tab "Suche in einem Tab im Vordergrund">
+<!ENTITY superdrag.action.open.search.in.current.tab "Suche im aktuellen Tab">
+<!ENTITY superdrag.action.ignore.search "Nichts">
+
+<!ENTITY superdrag.action.open.image.in.background.tab "Öffne Bild in einem Tab im Hintergrund">
+<!ENTITY superdrag.action.open.image.in.foreground.tab "Öffne Bild in einem Tab im Vordergund">
+<!ENTITY superdrag.action.save.image "Bild speichern">
+<!ENTITY superdrag.action.ignore.image "Nichts">
+
+<!ENTITY superdrag.panel "Kommandopanel">
+<!ENTITY superdrag.panel.show.distance "Bewegungsdistanz bis das Panel angezeigt wird">
+<!ENTITY superdrag.panel.show.distance.hint "In Pixeln">
+<!ENTITY superdrag.panel.position "Position des Panels">
+<!ENTITY superdrag.panel.follow.cursor "Folge dem Mauszeiger">
+<!ENTITY superdrag.panel.top.right "Top &amp; Right corner">
+<!ENTITY superdrag.newtab.behaviors "Verhalten bei neuen Tabs">
+<!ENTITY superdrag.newtab.pos "Wo die neuen Tabs platziert werden">
+<!ENTITY superdrag.newtab.pos.right "Rechts neben dem aktuellen">
+<!ENTITY superdrag.newtab.pos.rightmost "Ganz rechts">
+<!ENTITY superdrag.newtab.pos.child "Als Kind (Tree Style Tab)">
+<!ENTITY superdrag.newtab.onleft.for.foreground "Wo die Vordergrund-Tabs plaztiert werden.">
+<!ENTITY superdrag.newtab.onleft.yes "Links neben dem aktuellen">
+<!ENTITY superdrag.newtab.onleft.no "Wie oben">
+<!ENTITY superdrag.reset.all "Alles zurücksetzen">

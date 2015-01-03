@@ -24,6 +24,7 @@ const {classes: Cc, interfaces: Ci, results: Cr, utils: Cu} = Components;
 var SUPERDRAG_MODULES = [
 	'resource://superdrag/superdrag.js',
 	'resource://superdrag/prefloader.js',
+//	'resource://superdrag/utils.js',
 ];
 var logger = Cc['@mozilla.org/consoleservice;1'].getService(Ci.nsIConsoleService);
 

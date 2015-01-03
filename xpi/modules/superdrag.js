@@ -10,12 +10,10 @@ Cu.import("resource://gre/modules/FileUtils.jsm");
 Cu.import("resource://gre/modules/Downloads.jsm");
 Cu.import("resource://gre/modules/debug.js")
 Cu.import('resource://gre/modules/devtools/Console.jsm');
+Cu.import("resource://superdrag/utils.jsm");
 
 this.SuperDrag = new function() {
 	const PANELID = 'superdrag-panel';
-	let gUrlPatterns = [
-/^(https?:\/\/)?((\w|-)*\.){0,3}((\w|-)+)\.(com|net|org|gov|edu|mil|biz|cc|info|fm|mobi|tv|ag|am|asia|at|au|be|br|bz|ca|cn|co|de|do|ee|es|eu|fr|gd|gl|gs|im|in|it|jp|la|ly|me|mp|ms|mx|nl|pe|ph|ru|se|so|tk|to|tt|tw|us|uk|ws|xxx)(\/(\w|%|&|-|_|\||\?|\.|=|\/|#|~|!|\+|,|\*|@)*)?$/i,
-	];
 	let gStr = Cc["@mozilla.org/intl/stringbundle;1"].getService(Ci.nsIStringBundleService).createBundle("chrome://superdrag/locale/strings.properties");
 	let gDis = 100;
 	let gDefHandlers = {
@@ -151,6 +149,11 @@ this.SuperDrag = new function() {
 		let wm = Cc["@mozilla.org/appshell/window-mediator;1"].getService(Ci.nsIWindowMediator);
 		wm.addListener(windowListener);
 
+
+		let globalMM = Cc["@mozilla.org/globalmessagemanager;1"].getService(Ci.nsIMessageListenerManager);
+		globalMM.loadFrameScript('chrome://superdrag/content/frame-script.js', true);
+		globalMM.addMessageListener('superdrag@enjoyfreeware.org:drag', listenFromContent);
+
 		checkFirstRun(reason);
 	};
 
@@ -163,6 +166,13 @@ this.SuperDrag = new function() {
 		// Remove "new window" listener.
 		let wm = Cc["@mozilla.org/appshell/window-mediator;1"].getService(Ci.nsIWindowMediator);
 		wm.removeListener(windowListener);
+
+		let globalMM = Cc["@mozilla.org/globalmessagemanager;1"].getService(Ci.nsIMessageListenerManager);
+		// globalMM.broadcastAsyncMessage('superdrag@enjoyfreeware.org:shutdown');
+		globalMM.broadcastAsyncMessage(Utils.msg.shutdown);
+		globalMM = Cc["@mozilla.org/globalmessagemanager;1"].getService(Ci.nsIMessageListenerManager);
+		globalMM.removeDelayedFrameScript('chrome://superdrag/content/frame-script.js');
+		globalMM.removeMessageListener('superdrag@enjoyfreeware.org:drag', listenFromContent);
 	};
 
 	let windowListener = {
@@ -186,12 +196,28 @@ this.SuperDrag = new function() {
 		},
 		onWindowTitleChange: function(aWindow, aTitle) {}
 	};
+
+	function listenFromContent(msg) {
+		console.log(msg.objects.evt);
+		console.log(msg.objects.name);
+
+console.log(msg.name);
+console.log(msg.sync);
+console.log(msg.data);
+console.log(msg.target);
+console.log(msg.objects);
+
+		for (let k in msg.objects) {
+			console.log(k + ': ' + msg.objects[k]);
+		}
+	}
 	
 	// install or uninstall
 	function inUninstall(win, uninstall) {
 		try {
 			let doc = win.document;
 
+			/*
 			// 1. event handler
 			let tb = doc.getElementById('content'); // TabBrowser
 			if (tb && tb.mPanelContainer) {
@@ -204,6 +230,7 @@ this.SuperDrag = new function() {
 					}
 				}
 			}
+			*/
 
 			// 2. panel
 			let appcontent = doc.getElementById('appcontent');

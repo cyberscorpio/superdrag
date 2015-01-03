@@ -8,6 +8,7 @@
 		<em:version>0.15</em:version>
 		<em:type>2</em:type>
 		<em:bootstrap>true</em:bootstrap>
+		<em:multiprocessCompatible>true</em:multiprocessCompatible>
 
 		<em:unpack>false</em:unpack>
 		<em:targetApplication>
